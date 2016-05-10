@@ -3,7 +3,10 @@
  */
 package flightController;
 
+import java.util.Arrays;
+
 public class flightController {
+	
 	public flightController(){
 		
 	}
@@ -14,50 +17,60 @@ public class flightController {
 	}
 	
 	public String[][] getFlights(String origin, String destination, String returnDate, String date){
-		//String[][] allFlights = new String[x][y];
-				String[][] sa1 = new String[4][5];
-		for(int i = 0; i < sa1.length; i++) {           // sa1.length == 4
-		    for (int j = 0; j < sa1[i].length; j++) {     //sa1[i].length == 5
-		        sa1[i][j] = "new String value";
+		
+		
+		String[] flight = {"origin","dst","returnD","date"}; //EXTRACT FROM DATABASE, BASED ON PARAMETERS
+		String[][] allFlights = new String[4][4];
+		for(int i = 0; i < allFlights.length; i++) {
+		    for (int j = 0; j < allFlights[i].length; j++) {     
+		        allFlights[i][j] = flight[j];
 		    }
 		}
 		
-		for(String item[] : sa1){
-			System.out.println(item[0]);
-		}
-		return sa1;
+		//System.out.println(Arrays.deepToString(allFlights));
+		
+		
+		return allFlights;
 		
 	}
 	
 	public String[] getFlightsInfo(int id){
-		String[] x = null;
-		return x;
+		//EXTRACT FROM DATABASE, BASED ON PARAMETERS
+		String[] flight = {"origin","dst","returnD","date"};
+		return flight;
 	}
 	
 	public boolean addFlight(String origin, String destination, String deptDate, String travelTime, int price,int seats){
-		return false;
+		
+		
+		return this.addToDatabase(origin, destination, deptDate, travelTime, price, seats);
+		
 	}
 	
 	public boolean removeFlight(int id){
-		return false;
+		return this.deleteFromDatabase(id);
 	}
 	
 	public boolean updateFlight(String origin, String destination, String deptDate, String travelTime, int price,int seats){
-		return false;
+		return this.updateDatabase(origin, destination, deptDate, travelTime, price, seats);
 	}
 	
-	@SuppressWarnings("unused")
+
 	private boolean addToDatabase(String origin, String destination, String deptDate, String travelTime, int price,int seats){
-		return false;
+		//INSERT INTO DATABASE
+		
+		return true;
 	}
 	
-	@SuppressWarnings("unused")
+	
 	private boolean deleteFromDatabase(int id){
-		return false;
+		//DELETE FROM DATABASE
+		return true;
 	}
 	
-	@SuppressWarnings("unused")
+	
 	private boolean updateDatabase(String origin, String destination, String deptDate, String travelTime, int price,int seats){
-		return false;
+		//UPDATE DATABASE
+		return true;
 	}
 }
