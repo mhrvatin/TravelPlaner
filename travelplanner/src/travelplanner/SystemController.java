@@ -1,11 +1,5 @@
 package travelplanner;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 public class SystemController {
     public String user;
     private FlightController flight;
@@ -14,77 +8,69 @@ public class SystemController {
     private PaymentController pay;
     
     SystemController() {
-        this.testDBConnection();
-    }
-    
-    private void testDBConnection() {
-        Connection connection = null;
-
-        try {
-            String dbPath = "FULL/PATH/TO/DB/HERE.db";
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
-            Statement statement = connection.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
-            ResultSet rs = statement.executeQuery("select * from users");
-
-            while(rs.next()) {
-                // read the result set
-                System.out.println("user_id = " + rs.getString("user_id"));
-                System.out.println("user_name = " + rs.getString("user_name"));
-                System.out.println("first_name = " + rs.getString("first_name"));
-                System.out.println("last_name = " + rs.getString("last_name"));
-                System.out.println("email = " + rs.getString("email"));
-                System.out.println("user_password_hash = " + rs.getString("user_password_hash"));
-            }
-        } catch(SQLException e) {
-            // if the error message is "out of memory", 
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        } finally {
-            try {
-                if(connection != null)
-                connection.close();
-            } catch(SQLException e) {
-                // connection close failed.
-                System.err.println(e);
-            }
-        }
     }
     
     public boolean login(String username, String password) {
-        return true;
+        this.account = new AccountController(username, password);
+        
+        this.user = account.login(username, password);
+        
+        boolean ret = false;
+        
+        if (this.user.equals("")) {
+            ret = true;
+        }
+        
+        return ret;
     }
     
     public void register(String username, String password, String firstName, String lastName) {
+        this.account = new AccountController(username, password);
         
+        boolean result = account.register(firstName, lastName);
     }
     
     public boolean bookFlight(int id, int nrOfPassangers, int cardNr) {
-        return true;
+        this.flight = new FlightController();
+        
+        return this.flight.bookFlight(id, nrOfPassangers);
     }
     
-    public String[][] getFlights(String origin, String destination, String date) {
-        return new String[10][10]; // temp values
-    }
+    // Does not exist in FlightController
+    // Should it exist?
+    /*public String[][] getFlights(String origin, String destination, String date) {
+        this.flight = new FlightController();
+        
+        return this.flight.getFlights(origin, destination, date);
+    }*/
     
     public String[][] getFlights(String origin, String destination, String date, String returnDate) {
-        return new String[10][10]; // temp values
+        this.flight = new FlightController();
+        
+        return this.flight.getFlights(origin, destination, returnDate, date);
     }
     
-    public String[][] getFlights(int id) {
-        return new String[10][10]; // temp values
+    public String[] getFlights(int id) {
+        this.flight = new FlightController();
+        
+        return this.flight.getFlightsInfo(id);
     }
     
     public boolean addFlight(String origin, String destination, String deptDate, String deptTime, String travelTime, int nrOfSeats) {
-        return true;
+        this.flight = new FlightController();
+        
+        return this.flight.addFlight(origin, destination, deptDate, travelTime, nrOfSeats, nrOfSeats);
     }
     
     public boolean removeFlight(int id) {
-        return true;
+        this.flight = new FlightController();
+        
+        return this.flight.removeFlight(id);
     }
     
     public boolean updateFlight(String origin, String destination, String deptDate, String deptTime, String travelTime, int nrOfSeats) {
-        return true;
+        this.flight = new FlightController();
+        
+        return this.flight.updateFlight(origin, destination, deptDate, travelTime, nrOfSeats, nrOfSeats);
     }
 }
