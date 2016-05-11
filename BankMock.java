@@ -1,5 +1,9 @@
-package travelplanner;
+public class BankMock{
+    BankMock(){
 
-public class BankMock {
-    
+    }
+    public Boolean makePayment(int cardNr,int price){
+    //sql sats
+        return true;
+    }
 }
