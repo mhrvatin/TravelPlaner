@@ -1,9 +1,5 @@
-public class BankMock{
-    BankMock(){
+package travelplanner;
 
-    }
-    public Boolean makePayment(int cardNr,int price){
-    //sql sats
-        return true;
-    }
+public class BankMock {
+    
 }
