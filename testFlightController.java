@@ -1,8 +1,14 @@
 package travelplanner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 public class testFlightController {
 
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		FlightController flightTest = new FlightController();
 		System.out.println("Book Flight - " + flightTest.bookFlight(0, 0));
@@ -11,9 +17,8 @@ public class testFlightController {
 		System.out.println("Add Flight - " + flightTest.addFlight("x", "x", "x", "x", 0, 0));
 		System.out.println("Remove Flight - " + flightTest.removeFlight(0));
 		System.out.println("Update Flight - " + flightTest.updateFlight("x", "x", "x", "x", 0, 0));
-	
+
 		
-	
-	}*/
+	}
 
 }

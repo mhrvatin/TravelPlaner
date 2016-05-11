@@ -3,12 +3,60 @@
  */
 package travelplanner;
 
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 
 public class FlightController {
 	
+	
+	
+	private void dbConnection(String SQL){
+		Connection connection = null;
+
+		try {
+		    String dbPath = "C:/cygwin64/home/david/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
+		    connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+		    Statement statement = connection.createStatement();
+		    statement.setQueryTimeout(30);  // set timeout to 30 sec.
+		    ResultSet rs = statement.executeQuery("SELECT * FROM flights");
+		    if(SQL == ""){
+		    	
+		    }else{
+		    	statement.executeUpdate(SQL);
+		    }
+		    
+
+		    while(rs.next()) {
+		        // read the result set
+		        System.out.println("user_id = " + rs.getString("origin"));
+		        /*System.out.println("user_name = " + rs.getString("user_name"));
+		        System.out.println("first_name = " + rs.getString("first_name"));
+		        System.out.println("last_name = " + rs.getString("last_name"));
+		        System.out.println("email = " + rs.getString("email"));
+		        System.out.println("user_password_hash = " + rs.getString("user_password_hash"));*/
+		    }
+		} catch(SQLException e) {
+		    // if the error message is "out of memory",
+		    // it probably means no database file is found
+		    System.err.println(e.getMessage());
+		} finally {
+		    try {
+		        if(connection != null)
+		        connection.close();
+		    } catch(SQLException e) {
+		        // connection close failed.
+		        System.err.println(e);
+		    }
+		}
+	}
+	
 	public FlightController(){
-		
+		this.dbConnection("");
 	}
 	
 	public boolean bookFlight(int id, int nrOfPassengers){
@@ -43,7 +91,7 @@ public class FlightController {
 	public boolean addFlight(String origin, String destination, String deptDate, String travelTime, int price,int seats){
 		
 		
-		return this.addToDatabase(origin, destination, deptDate, travelTime, price, seats);
+		return this.addToDatabase(origin, destination,"deptTime", deptDate, travelTime, price, seats);
 		
 	}
 	
@@ -56,9 +104,9 @@ public class FlightController {
 	}
 	
 
-	private boolean addToDatabase(String origin, String destination, String deptDate, String travelTime, int price,int seats){
+	private boolean addToDatabase(String origin, String destination,String deptTime, String deptDate, String travelTime, int price,int seats){
 		//INSERT INTO DATABASE
-		
+		this.dbConnection("INSERT INTO flights VALUES(2,'Malmo','Karlskrona','2016-06-10','15:02','02:00',3000,240)");
 		return true;
 	}
 	
