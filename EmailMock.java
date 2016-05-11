@@ -1,3 +1,5 @@
+package travelplanner;
+
 public class EmailMock {
 	
 	//This function takes parameter email which is a string containing the message and 

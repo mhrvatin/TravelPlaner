@@ -1,13 +1,13 @@
 /**
  * 
  */
-package flightController;
+package travelplanner;
 
 import java.util.Arrays;
 
-public class flightController {
+public class FlightController {
 	
-	public flightController(){
+	public FlightController(){
 		
 	}
 	

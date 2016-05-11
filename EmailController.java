@@ -1,3 +1,5 @@
+package travelplanner;
+
 public class EmailController {
 
 	private String user;
@@ -11,12 +13,12 @@ public class EmailController {
 		//Save users email in variable (String email)
 		//String email = Value from database;
 		
-		String recipt=this.makeRecipt();
+		//String recipt=this.makeRecipt();
 		
 		
-		bool ret=this.sendEmail(email, recipt);
+		//boolean ret=this.sendEmail(email, recipt);
 		
-		return ret;
+		return true;
 		
 		
 		
@@ -31,7 +33,8 @@ public class EmailController {
 		//Save data from database in the variable (int transaction)
 		//int transaction = Value from database
 		
-		return transaction;
+		//return transaction;
+                return 1; // temp
 	}
 	//TASK: Creates the reciept out of data from the getTranscation function
 	private void makeRecipt(){
@@ -44,11 +47,8 @@ public class EmailController {
 		//Save data from database in the variable(String [] user)
 		//String [] user=Value from database
 		
-		String reciept="Recipt from TravelPlanner</br>"
-				+ "User: " + user['username'] + " bought a ticket value of" + transaction;
-		
-				
-		return reciept 
+		//String reciept="Recipt from TravelPlanner</br>"
+		//		+ "User: " + user['username'] + " bought a ticket value of" + transaction;
 	
 	
 	}

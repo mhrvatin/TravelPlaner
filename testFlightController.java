@@ -1,10 +1,10 @@
-package flightController;
+package travelplanner;
 
 public class testFlightController {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		flightController flightTest = new flightController();
+		FlightController flightTest = new FlightController();
 		System.out.println("Book Flight - " + flightTest.bookFlight(0, 0));
 		System.out.println("Get Flight - " + flightTest.getFlights("x","x","x","x"));
 		System.out.println("Get Flight Info - " + flightTest.getFlightsInfo(0));
@@ -14,6 +14,6 @@ public class testFlightController {
 	
 		
 	
-	}
+	}*/
 
 }
