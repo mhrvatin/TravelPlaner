@@ -3,4 +3,5 @@ SystemController:
 
 EmailController:
 * add a EmailMock instance
+* makeRecipt return a string
 

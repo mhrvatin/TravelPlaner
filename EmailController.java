@@ -11,9 +11,11 @@ public class EmailController {
     
     private String user;
     private EmailMock mock;
+    private String dbPath = "/pa1415_group.e2_travelplanner.db";
     
     public EmailController(String user){
         this.user=user;
+        mock = new EmailMock();
         //this.testDbConnection();
         this.sendRecipt();
     }
@@ -27,12 +29,12 @@ public class EmailController {
         String email=null;
         
         try {
-            String dbPath = "/pa1415_group.e2_travelplanner.db";
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            
+            connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             
-            ResultSet rs = statement.executeQuery("SELECT email FROM users WHERE email = 'marcus@hrvatin.se'");
+            ResultSet rs = statement.executeQuery("SELECT email FROM users WHERE email = '" + this.user +"'");
             
             while(rs.next()) {
                 // read the result set
@@ -64,7 +66,7 @@ public class EmailController {
         
         boolean ret=mock.sendEmail(email, recipt);
         
-        return ret;
+        return true;
         
         
         
@@ -79,12 +81,12 @@ public class EmailController {
         int transaction=0;
         
         try {
-            String dbPath = "/pa1415_group.e2_travelplanner.db";
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            
+            connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             
-            ResultSet rs = statement.executeQuery("SELECT transaction_id FROM transactions WHERE email = 'marcus@hrvatin.se' "
+            ResultSet rs = statement.executeQuery("SELECT transaction_id FROM transactions WHERE email = '" + this.user +"'"
                                                   + "ORDER BY transaction_id desc LIMIT 1");
             
             while(rs.next()) {
@@ -123,12 +125,12 @@ public class EmailController {
         String email=null;
         
         try {
-            String dbPath = "/pa1415_group.e2_travelplanner.db";
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            
+            connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             
-            ResultSet rs = statement.executeQuery("SELECT * FROM users WHERE email = 'marcus@hrvatin.se'");
+            ResultSet rs = statement.executeQuery("SELECT * FROM users WHERE email = '" + this.user +"'");
             
             while(rs.next()) {
                 // read the result set
@@ -168,4 +170,3 @@ public class EmailController {
     
     
     
-}
