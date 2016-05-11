@@ -1,2 +1,6 @@
 SystemController:
 * changed returntype of getFlights() from String[][] to String[]
+
+EmailController:
+* add a EmailMock instance
+

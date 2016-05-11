@@ -1,57 +1,171 @@
 package travelplanner;
 
-public class EmailController {
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-	private String user;
-	
-	//TASK: Sends the reciept to the email adress of the current logged in user after a successful booking
-	public boolean sendRecipt(){
-		
-		//Get current users email ( ? = private varaible user in the class)
-		//Select email From Users where username = ?
-		
-		//Save users email in variable (String email)
-		//String email = Value from database;
-		
-		//String recipt=this.makeRecipt();
-		
-		
-		//boolean ret=this.sendEmail(email, recipt);
-		
-		return true;
-		
-		
-		
-	}
-	
-	//TASK: Collects the info about the transcation out of data that is collected from the database
-	private int getTranscation(){
-		
-		//Get current user transaction (? = private varaible user in the class)
-		//Select transaction From Transactions where username = ? ORDER BY created desc Limit 1; 
-		
-		//Save data from database in the variable (int transaction)
-		//int transaction = Value from database
-		
-		//return transaction;
-                return 1; // temp
-	}
-	//TASK: Creates the reciept out of data from the getTranscation function
-	private void makeRecipt(){
-		
-		int transaction = this.getTranscation();
-		
-		//Get current user info (? = private varaible user in the class)
-		// Select * From Users where username = ?
-		
-		//Save data from database in the variable(String [] user)
-		//String [] user=Value from database
-		
-		//String reciept="Recipt from TravelPlanner</br>"
-		//		+ "User: " + user['username'] + " bought a ticket value of" + transaction;
-	
-	
-	}
-	
-	
+
+public class EmailController {
+    
+    private String user;
+    private EmailMock mock;
+    
+    public EmailController(String user){
+        this.user=user;
+        //this.testDbConnection();
+        this.sendRecipt();
+    }
+    
+    //TASK: Sends the reciept to the email adress of the current logged in user after a successful booking
+    public boolean sendRecipt(){
+        
+        //Get current users email ( ? = private varaible user in the class)
+        //Select email From Users where username = ?
+        Connection connection = null;
+        String email=null;
+        
+        try {
+            String dbPath = "/pa1415_group.e2_travelplanner.db";
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+            
+            ResultSet rs = statement.executeQuery("SELECT email FROM users WHERE email = 'marcus@hrvatin.se'");
+            
+            while(rs.next()) {
+                // read the result set
+                
+                //Save users email in variable (String email)
+                //String email = Value from database;
+                email=rs.getString("email");
+            }
+        } catch(SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if(connection != null)
+                    connection.close();
+            } catch(SQLException e) {
+                // connection close failed.
+                System.err.println(e);
+            }
+        }
+        
+        
+        System.out.println(email);
+        
+        
+        String recipt=this.makeRecipt();
+        
+        
+        boolean ret=mock.sendEmail(email, recipt);
+        
+        return ret;
+        
+        
+        
+    }
+    
+    //TASK: Collects the info about the transcation out of data that is collected from the database
+    private int getTranscation(){
+        
+        //Get current user transaction (? = private varaible user in the class)
+        //Select transaction From Transactions where username = ? ORDER BY created desc Limit 1;
+        Connection connection = null;
+        int transaction=0;
+        
+        try {
+            String dbPath = "/pa1415_group.e2_travelplanner.db";
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+            
+            ResultSet rs = statement.executeQuery("SELECT transaction_id FROM transactions WHERE email = 'marcus@hrvatin.se' "
+                                                  + "ORDER BY transaction_id desc LIMIT 1");
+            
+            while(rs.next()) {
+                //Save data from database in the variable (int transaction)
+                //int transaction = Value from database
+                transaction=rs.getInt("transaction_id");
+                
+            }
+        } catch(SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if(connection != null)
+                    connection.close();
+            } catch(SQLException e) {
+                // connection close failed.
+                System.err.println(e);
+            }
+        }
+        
+        
+        return transaction;
+    }
+    //TASK: Creates the reciept out of data from the getTranscation function
+    private String makeRecipt(){
+        
+        int transaction = this.getTranscation();
+        
+        //Get current user info (? = private varaible user in the class)
+        // Select * From Users where username = ?
+        Connection connection = null;
+        String name=null;
+        String lastName=null;
+        String email=null;
+        
+        try {
+            String dbPath = "/pa1415_group.e2_travelplanner.db";
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+            
+            ResultSet rs = statement.executeQuery("SELECT * FROM users WHERE email = 'marcus@hrvatin.se'");
+            
+            while(rs.next()) {
+                // read the result set
+                
+                //Save data from database in the variables:
+                //(String userName,  String name,  String lastName, String email);
+                name=rs.getString("first_name");
+                lastName=rs.getString("last_name");
+                email=rs.getString("email");
+                
+            }
+        } catch(SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if(connection != null)
+                    connection.close();
+            } catch(SQLException e) {
+                // connection close failed.
+                System.err.println(e);
+            }
+        }
+        
+        
+        
+        String reciept="Recipt from TravelPlanner \n"
+        + "Hello " + name + " " +lastName +"! the transaction id is " + transaction +" on your account "
+        +" with the register email: " + email ;
+        
+        System.out.println(reciept);
+        
+        return reciept;
+        
+    }
+    
+    
+    
 }
