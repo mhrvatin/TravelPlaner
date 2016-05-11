@@ -15,8 +15,10 @@ public class PaymentController{
         this.price=price;
         this.user=user;
     }
-    public Boolean makePayment(int cardNr,int price){
-        return true;
+    public Boolean makePayment(){
+        Boolean accepted=false;
+
+        return accepted;
     }
     private Boolean logTranscation(){
 
