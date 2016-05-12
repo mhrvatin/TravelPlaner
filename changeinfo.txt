@@ -1,2 +1,12 @@
 SystemController:
 * changed returntype of getFlights() from String[][] to String[]
+
+EmailController:
+* add a EmailMock instance
+* makeRecipt return a string
+
+
+
+FlightController:*
+- Added functions for Database functions
+- Added deptTime to functions parameters
