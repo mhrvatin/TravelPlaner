@@ -13,7 +13,7 @@ public class SystemController {
     public boolean login(String username, String password) {
         this.account = new AccountController(username, password);
         
-        this.user = account.login();
+        this.user = account.login(username, password);
         
         boolean ret = false;
         
