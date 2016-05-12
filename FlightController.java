@@ -1,7 +1,3 @@
-/**
- * 
- */
-package travelplanner;
 
 import java.util.Arrays;
 
