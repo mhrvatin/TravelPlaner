@@ -59,8 +59,6 @@ public class maingui extends JFrame {
 		calOriginDate.setWeekOfYearVisible(false);
 		
 		JCalendar calReturnDate = new JCalendar();
-		calReturnDate.setFocusable(false);
-		calReturnDate.getDayChooser().getDayPanel().setFocusable(false);
 		calReturnDate.getDayChooser().getDayPanel().setEnabled(false);
 		calReturnDate.getDayChooser().setAlwaysFireDayProperty(true);
 		calReturnDate.getDayChooser().setEnabled(false);
