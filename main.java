@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import com.toedter.calendar.JDateChooser;
 
 public class main {
 
@@ -49,20 +50,6 @@ public class main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JCalendar calOrigin = new JCalendar();
-		calOrigin.setWeekOfYearVisible(false);
-		calOrigin.setBounds(94, 161, 144, 153);
-		frame.getContentPane().add(calOrigin);
-		
-		JCalendar calReturn = new JCalendar();
-		calReturn.getDayChooser().getDayPanel().setEnabled(false);
-		calReturn.getDayChooser().setEnabled(false);
-		calReturn.getDayChooser().setAlwaysFireDayProperty(true);
-		calReturn.setWeekOfYearVisible(false);
-		calReturn.setEnabled(false);
-		calReturn.setBounds(376, 161, 144, 153);
-		frame.getContentPane().add(calReturn);
-		
 		txtOrigin = new JTextField();
 		txtOrigin.setBounds(94, 107, 144, 20);
 		frame.getContentPane().add(txtOrigin);
@@ -82,25 +69,56 @@ public class main {
 		frame.getContentPane().add(lblDestination);
 		
 		JButton btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loginGUI test = new loginGUI();
+				test.main();
+			}
+		});
 		btnLogin.setBounds(391, 11, 89, 21);
 		frame.getContentPane().add(btnLogin);
 		
 		JButton btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				registerGUI test = new registerGUI();
+				test.main();
+			}
+		});
 		btnRegister.setBounds(489, 11, 89, 21);
 		frame.getContentPane().add(btnRegister);
 		
 		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				frame = new searchGUI();
-				
+				searchGUI test = new searchGUI();
+				test.main();
 			}
 		});
-		btnSearch.setBounds(255, 362, 89, 23);
+		btnSearch.setBounds(253, 304, 89, 23);
 		frame.getContentPane().add(btnSearch);
 		
 		JCheckBox chckbxReturnFlight = new JCheckBox("Return Flight");
-		chckbxReturnFlight.setBounds(411, 362, 97, 23);
+		chckbxReturnFlight.setBounds(376, 304, 97, 23);
 		frame.getContentPane().add(chckbxReturnFlight);
+		
+		JDateChooser dateOrigin = new JDateChooser();
+		dateOrigin.setBounds(94, 159, 95, 20);
+		frame.getContentPane().add(dateOrigin);
+		
+		JDateChooser dateReturn = new JDateChooser();
+		dateReturn.setEnabled(false);
+		dateReturn.setBounds(376, 159, 95, 20);
+		frame.getContentPane().add(dateReturn);
+		
+		JButton btnAdminTest = new JButton("Admin test");
+		btnAdminTest.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				adminMainGUI test = new adminMainGUI();
+				test.main();
+			}
+		});
+		btnAdminTest.setBounds(10, 10, 111, 23);
+		frame.getContentPane().add(btnAdminTest);
 	}
 }
