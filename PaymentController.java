@@ -1,4 +1,7 @@
+import java.sql.*;
+
 public class PaymentController{
+    String dbPath = "/home/freak/TravelPlanner/travelplanner.db";
     private BankMock bank;
     private String user;
     private int cardNr;
@@ -15,13 +18,38 @@ public class PaymentController{
         this.price=price;
         this.user=user;
     }
-    public Boolean makePayment(){
-        Boolean accepted=false;
-
-        return accepted;
+    public Boolean makePayment() {
+        Boolean payed=false;
+        if(cardNr != 0 && user==""){
+           payed = bank.makePayment(cardNr,price);
+        }
+        if(payed){
+            logTranscation();
+        }
+        return payed;
     }
     private Boolean logTranscation(){
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+            statement.executeUpdate("INSERT INTO bank VALUES (" + cardNr +"," + price +"," + user +")");
+                //update executeUpdate
+        } catch(SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if(connection != null)
+                    connection.close();
+            } catch(SQLException e) {
+                // connection close failed.
+                System.err.println(e);
+            }
 
         return true;
     }
 }
+
