@@ -13,13 +13,14 @@ import java.sql.Statement;
 
 public class FlightController {
 	
+	private String dbPath = "C:/cygwin64/home/david/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
+	//private String dbPath = "C:/cygwin/home/David/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
 	private boolean dbDelete(String SQL){
 		Connection connection = null;
 		boolean success = true;
 		try {
-		    //String dbPath = "C:/cygwin64/home/david/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
-		    String dbPath = "C:/cygwin/home/David/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
-		    connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+		   
+		    connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbPath);
 		    Statement statement = connection.createStatement();
 		    statement.setQueryTimeout(30);  
 		    
@@ -56,9 +57,8 @@ public class FlightController {
 		Connection connection = null;
 		boolean success = true;
 		try {
-		    //String dbPath = "C:/cygwin64/home/david/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
-		    String dbPath = "C:/cygwin/home/David/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
-		    connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+		    
+		    connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbPath);
 		    Statement statement = connection.createStatement();
 		    statement.setQueryTimeout(30);  
 		    
@@ -97,9 +97,8 @@ public class FlightController {
 		if(SQL != ""){
 			
 			try {
-			    //String dbPath = "C:/cygwin64/home/david/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
-			    String dbPath = "C:/cygwin/home/David/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
-			    connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+			    
+			    connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbPath);
 			    Statement statement = connection.createStatement();
 			    statement.setQueryTimeout(30);  
 			    ResultSet rs = statement.executeQuery(SQL);    
@@ -128,9 +127,8 @@ public class FlightController {
 		if(SQL != ""){
 			
 			try {
-			    //String dbPath = "C:/cygwin64/home/david/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
-			    String dbPath = "C:/cygwin/home/David/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
-			    connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+			    
+			    connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbPath);
 			    Statement statement = connection.createStatement();
 			    statement.setQueryTimeout(30);  
 			    ResultSet rs = statement.executeQuery(SQL);   
@@ -173,10 +171,10 @@ public class FlightController {
 
 	}
 	
-	public String[][] getFlights(String origin, String destination, String returnDate, String date){
+	public String[][] getFlights(String origin, String destination,String date){
 		String[][] flights = null;
 		flights = this.dbGetFlights("SELECT * FROM flights WHERE origin = '"+ origin + "' AND destination = '" + destination + "' AND departure_date = '" + date + "'" );
-		System.out.println(flights[0][1]);
+		
 		return flights;
 		
 	}
