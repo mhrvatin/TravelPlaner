@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class PaymentController{
-    String dbPath = "/home/freak/TravelPlanner/travelplanner.db";
+    String dbPath = "/home/freak/TravelPlanner/pa1415_group.e2_travelplanner.db";
     private BankMock bank;
     private String user;
     private int cardNr;
@@ -41,7 +41,6 @@ public class PaymentController{
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             statement.executeUpdate("INSERT INTO bank VALUES (" + cardNr +"," + price +"," + user +")");
-                //update executeUpdate
         } catch(SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
