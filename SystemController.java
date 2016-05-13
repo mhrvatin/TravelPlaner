@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class SystemController {
-	public static String dbPath = "C:/Users/Administratör/workspace/GIT_JAVA/TravelPlaner/pa1415_group.e2_travelplanner.db";
+	public static String dbPath = "/home/macke/documents/skola/pa1415/TravelPlanner/pa1415_group.e2_travelplanner.db";
 	
     public String user;
     private FlightController flight;
