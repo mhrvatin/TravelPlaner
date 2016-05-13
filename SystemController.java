@@ -69,17 +69,10 @@ public class SystemController {
     
     // Does not exist in FlightController
     // Should it exist?
-    /*public String[][] getFlights(String origin, String destination, String date) {
+    public String[][] getFlights(String origin, String destination, String date) {
         this.flight = new FlightController();
         
         return this.flight.getFlights(origin, destination, date);
-    }*/
-    
-    public String[][] getFlights(String origin, String destination, String date, String returnDate) {
-        this.flight = new FlightController();
-        
-//        return this.flight.getFlights(origin, destination, returnDate, date);
-        return new String[2][2];
     }
     
     public String[] getFlights(int id) {

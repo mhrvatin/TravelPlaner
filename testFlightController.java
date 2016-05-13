@@ -6,7 +6,6 @@ public class testFlightController {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
 		//FlightController flightTest = new FlightController();
 		//System.out.println("Book Flight - " + flightTest.bookFlight(1, 1)); CHECK
 
