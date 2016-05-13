@@ -119,12 +119,39 @@ public class AccountController {
 	
 	private boolean addUserToDB(String firstName, String lastName)
 	{
+		boolean ret = false;
 		String user = this.user;
 		String password = this.password;
 		
+		Connection connection = null;
+
+		try {
+		    connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+		    Statement statement = connection.createStatement();
+		    statement.setQueryTimeout(30);  // set timeout to 30 sec.
+
+		    statement.executeUpdate("INSERT INTO users VALUES(" + null + ", " +
+				"'" + user + "', " +
+			    "'" + password + "', " +
+			    "'" + firstName + "', " +
+			    "'" + lastName + "' )"); 
+		    
+		    ret = true;		    
+		} catch(SQLException e) {
+		    // if the error message is "out of memory",
+		    // it probably means no database file is found
+		    System.err.println(e.getMessage());
+		} finally {
+		    try {
+		        if(connection != null)
+		        connection.close();
+		    } catch(SQLException e) {
+		        // connection close failed.
+		        System.err.println(e);
+		    }
+		}
 		
-		
-		return true;
+		return ret;
 	}
 	
 	private String getUser()
