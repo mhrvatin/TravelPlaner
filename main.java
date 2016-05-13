@@ -7,11 +7,14 @@ import com.toedter.calendar.JCalendar;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -34,6 +37,11 @@ public class main {
     private JTextField lastNameField;
     private JTextField emailField;
     private JTextField passwordConfirmField;
+    private JTextField txtPrice;
+    private JTextField txtDate;
+    private JTextField txtTime;
+    private JTextField txtDate_2;
+    private JTextField txtTime_2;
     private SystemController sc = new SystemController();
 
     /**
@@ -56,17 +64,19 @@ public class main {
      * Create the application.
      */
     public main() {
-        initialize();
+    	frame = new JFrame();
+        
+        initialize(frame);
     }
 
     /**
      * Initialize the contents of the frame.
      */
-    private void initialize() {
-        frame = new JFrame();
-        frame.setBounds(100, 100, 723, 540);
+    private void initialize(JFrame frame) {
+    	frame.setBounds(100, 100, 723, 540);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
+        
         login_register(frame);
 
         txtOrigin = new JTextField();
@@ -96,6 +106,7 @@ public class main {
             	frame.getContentPane().removeAll();
             	login_register(frame);
             	search(frame);
+            	frame.getContentPane().revalidate();
             	frame.getContentPane().repaint();
             	//frame.repaint();
             	
@@ -135,6 +146,7 @@ public class main {
              public void actionPerformed(ActionEvent e) {
             	frame.getContentPane().removeAll();
              	login(frame);
+             	frame.getContentPane().revalidate();
              	frame.getContentPane().repaint();
              }
          });
@@ -146,6 +158,7 @@ public class main {
              public void actionPerformed(ActionEvent e) {
             	frame.getContentPane().removeAll();
              	register(frame);
+             	frame.getContentPane().revalidate();
              	frame.getContentPane().repaint();
              }
          });
@@ -187,13 +200,15 @@ public class main {
                     if (res) {
                         System.out.println("res true, successfully logged in");
                         frame.getContentPane().removeAll();
-                        search(frame);
+                        initialize(frame);
+                        frame.getContentPane().revalidate();
                     	frame.getContentPane().repaint();
                         
                     } else {
                         System.out.println("res false");
                         frame.getContentPane().removeAll();
-                        search(frame);
+                        initialize(frame);
+                        frame.getContentPane().revalidate();
                     	frame.getContentPane().repaint();
                     }
                     
@@ -335,10 +350,105 @@ public class main {
 		JButton btnBook = new JButton("Book");
 		btnBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				frame.getContentPane().removeAll();
+            	book(frame);
+            	frame.getContentPane().repaint();
 			}
 		});
 		btnBook.setBounds(280, 424, 89, 23);
 		frame.getContentPane().add(btnBook);
     }
+    
+    public void book(JFrame frame){
+    	contentPane = new JPanel();
+		
+		frame.getContentPane().setLayout(null);
+		frame.getContentPane().add(contentPane);
+
+		txtOrigin = new JTextField();
+	    txtOrigin.setBounds(81, 87, 176, 20);
+	    frame.getContentPane().add(txtOrigin);
+	    txtOrigin.setColumns(10);
+	
+	    JTextField txtDestination = new JTextField();
+	    txtDestination.setColumns(10);
+	    txtDestination.setBounds(81, 144, 176, 20);
+	    frame.getContentPane().add(txtDestination);
+	
+	    txtPrice = new JTextField();
+	    txtPrice.setColumns(10);
+	    txtPrice.setBounds(81, 261, 58, 20);
+	    frame.getContentPane().add(txtPrice);
+	
+	    txtDate = new JTextField();
+	    txtDate.setBounds(399, 87, 86, 20);
+	    frame.getContentPane().add(txtDate);
+	    txtDate.setColumns(10);
+	
+	    txtTime = new JTextField();
+	    txtTime.setColumns(10);
+	    txtTime.setBounds(559, 87, 86, 20);
+	    frame.getContentPane().add(txtTime);
+	
+	    txtDate_2 = new JTextField();
+	    txtDate_2.setColumns(10);
+	    txtDate_2.setBounds(399, 144, 86, 20);
+	    frame.getContentPane().add(txtDate_2);
+
+	    txtTime_2 = new JTextField();
+	    txtTime_2.setColumns(10);
+	    txtTime_2.setBounds(559, 144, 86, 20);
+	    frame.getContentPane().add(txtTime_2);
+	    
+	    JLabel lblOrigin = new JLabel("Origin");
+	    lblOrigin.setBounds(81, 62, 46, 14);
+	    frame.getContentPane().add(lblOrigin);
+	    
+	    JLabel lblDestination = new JLabel("Destination");
+	    lblDestination.setBounds(81, 118, 136, 14);
+	    frame.getContentPane().add(lblDestination);
+	    
+	    JLabel lblEnterPassengers = new JLabel("Enter Nr Of Passengers");
+	    lblEnterPassengers.setBounds(81, 179, 136, 14);
+	    frame.getContentPane().add(lblEnterPassengers);
+	    
+	    JLabel lblPrice = new JLabel("Price");
+	    lblPrice.setBounds(81, 235, 46, 14);
+	    frame.getContentPane().add(lblPrice);
+	    
+	    JLabel lblDate = new JLabel("Date");
+	    lblDate.setBounds(399, 62, 46, 14);
+	    frame.getContentPane().add(lblDate);
+	    
+	    JLabel lblDate_2 = new JLabel("Date");
+	    lblDate_2.setBounds(399, 118, 46, 14);
+	    frame.getContentPane().add(lblDate_2);
+	    
+	    JLabel lblTime = new JLabel("Time");
+	    lblTime.setBounds(559, 62, 46, 14);
+	    frame.getContentPane().add(lblTime);
+	    
+	    JLabel lblTime_2 = new JLabel("Time");
+	    lblTime_2.setBounds(559, 119, 46, 14);
+	    frame.getContentPane().add(lblTime_2);
+	    
+	    JSpinner spPassengers = new JSpinner();
+	    spPassengers.setEnabled(true);
+	    
+	    
+	    spPassengers.setBounds(81, 204, 29, 20);
+	    frame.getContentPane().add(spPassengers);
+	    frame.getContentPane().revalidate();
+	    JButton btnBook = new JButton("Book");
+	    btnBook.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {     
+	        	spPassengers.setEnabled(true);
+	        	spPassengers.repaint();
+	         }
+	     });
+	    btnBook.setBounds(278, 362, 89, 23);
+	    frame.getContentPane().add(btnBook);
+	
+	}
+    
 }
