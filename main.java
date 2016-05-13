@@ -29,6 +29,7 @@ public class main {
 	private JTable table;
 	private JPanel contentPane;
     private JFrame frame;
+    private JTextField txtCardNr;
     private JTextField txtOrigin;
     private JTextField txtDestination;
     private JTextField usernameField;
@@ -42,6 +43,9 @@ public class main {
     private JTextField txtTime;
     private JTextField txtDate_2;
     private JTextField txtTime_2;
+	private JTextField txtDepartureTime;
+	private JTextField txtArrivalTime;
+	private JTextField txtPricePerSeat;
     private SystemController sc = new SystemController();
 
     /**
@@ -69,9 +73,6 @@ public class main {
         initialize(frame);
     }
 
-    /**
-     * Initialize the contents of the frame.
-     */
     private void initialize(JFrame frame) {
     	frame.setBounds(100, 100, 723, 540);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -131,14 +132,16 @@ public class main {
         JButton btnAdminTest = new JButton("Admin test");
         btnAdminTest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                adminMainGUI test = new adminMainGUI();
-                test.main();
+            	frame.getContentPane().removeAll();
+            	
+            	adminMain(frame);
+            	frame.getContentPane().revalidate();
+            	frame.getContentPane().repaint();
             }
         });
         btnAdminTest.setBounds(10, 10, 111, 23);
         frame.getContentPane().add(btnAdminTest);
     }
-    
     
     public void login_register(JFrame frame){
     	 JButton btnLogin = new JButton("Login");
@@ -164,6 +167,25 @@ public class main {
          });
          btnRegister.setBounds(489, 11, 89, 21);
          frame.getContentPane().add(btnRegister);
+    }
+    
+    public void user_logout(JFrame frame){
+    	
+    	JLabel lblUser = new JLabel("Welcome User: xxx");
+        lblUser.setBounds(345, 11, 150, 21);
+        frame.getContentPane().add(lblUser);
+
+        JButton btnRegister = new JButton("Logout");
+        btnRegister.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+           	frame.getContentPane().removeAll();
+            	initialize(frame);
+            	frame.getContentPane().revalidate();
+            	frame.getContentPane().repaint();
+            }
+        });
+        btnRegister.setBounds(489, 11, 89, 21);
+        frame.getContentPane().add(btnRegister);
     }
     
     public void login(JFrame frame){
@@ -324,7 +346,6 @@ public class main {
 		
 		scrollPane.setViewportView(table);
 		
-		
 		txtOrigin = new JTextField();
 		txtOrigin.setBounds(66, 49, 161, 20);
 		frame.getContentPane().add(txtOrigin);
@@ -351,6 +372,7 @@ public class main {
 		btnBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.getContentPane().removeAll();
+				
             	book(frame);
             	frame.getContentPane().repaint();
 			}
@@ -361,6 +383,7 @@ public class main {
     
     public void book(JFrame frame){
     	contentPane = new JPanel();
+    	user_logout(frame);
 		
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().add(contentPane);
@@ -438,17 +461,236 @@ public class main {
 	    
 	    spPassengers.setBounds(81, 204, 29, 20);
 	    frame.getContentPane().add(spPassengers);
-	    frame.getContentPane().revalidate();
+	    
 	    JButton btnBook = new JButton("Book");
 	    btnBook.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {     
-	        	spPassengers.setEnabled(true);
-	        	spPassengers.repaint();
+	        	frame.getContentPane().removeAll();
+             	pay(frame);
+             	frame.getContentPane().revalidate();
+             	frame.getContentPane().repaint();
 	         }
 	     });
 	    btnBook.setBounds(278, 362, 89, 23);
 	    frame.getContentPane().add(btnBook);
 	
 	}
+    
+    public void pay(JFrame frame){
+    	contentPane = new JPanel();
+    	user_logout(frame);
+		
+		frame.getContentPane().setLayout(null);
+		frame.getContentPane().add(contentPane);
+		
+		JLabel lblPrice = new JLabel("Price:");
+		lblPrice.setBounds(77, 126, 46, 14);
+		frame.getContentPane().add(lblPrice);
+		
+		JLabel lblDisplayPrice = new JLabel("Displaying Price");
+		lblDisplayPrice.setBounds(161, 126, 162, 14);
+		frame.getContentPane().add(lblDisplayPrice);
+		
+		JLabel lblCardNr = new JLabel("Card Nr:");
+		lblCardNr.setBounds(77, 172, 46, 14);
+		frame.getContentPane().add(lblCardNr);
+		
+		txtCardNr = new JTextField();
+		txtCardNr.setBounds(161, 169, 342, 20);
+		frame.getContentPane().add(txtCardNr);
+		txtCardNr.setColumns(10);
+		
+		JLabel lblReceipt = new JLabel("Receipt sent to:");
+		lblReceipt.setBounds(77, 222, 150, 14);
+		frame.getContentPane().add(lblReceipt);
+		
+		JLabel lblUserEmail = new JLabel("User Email");
+		lblUserEmail.setBounds(161, 270, 226, 14);
+		frame.getContentPane().add(lblUserEmail);
+		
+		JButton btnPay = new JButton("Pay");
+		btnPay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.getContentPane().removeAll(); 
+				initialize(frame);
+				frame.getContentPane().validate();
+				frame.getContentPane().repaint();
+			}
+		});
+		btnPay.setBounds(77, 328, 89, 23);
+		frame.getContentPane().add(btnPay);
+    }
+    
+    public void adminMain(JFrame frame){
+    	contentPane = new JPanel();
+    	user_logout(frame);
+		
+    	frame.getContentPane().setLayout(null);
+		frame.getContentPane().add(contentPane);
+		
+		txtOrigin = new JTextField();
+		txtOrigin.setColumns(10);
+		txtOrigin.setBounds(35, 60, 161, 20);
+		frame.getContentPane().add(txtOrigin);
+		
+		JLabel lblOrigin = new JLabel("Origin");
+		lblOrigin.setBounds(35, 35, 46, 14);
+		frame.getContentPane().add(lblOrigin);
+		
+		JLabel lblDestination = new JLabel("Destination");
+		lblDestination.setBounds(206, 35, 100, 14);
+		frame.getContentPane().add(lblDestination);
+		
+		txtDestination = new JTextField();
+		txtDestination.setColumns(10);
+		txtDestination.setBounds(206, 60, 164, 20);
+		frame.getContentPane().add(txtDestination);
+		
+		JDateChooser dateOrigin = new JDateChooser();
+		dateOrigin.setBounds(380, 60, 95, 20);
+		frame.getContentPane().add(dateOrigin);
+		
+		JButton button = new JButton("Search");
+		button.setBounds(496, 59, 89, 23);
+		frame.getContentPane().add(button);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBounds(35, 96, 550, 321);
+		frame.getContentPane().add(scrollPane);
+
+		DefaultTableModel model = new DefaultTableModel();
+		
+		table = new JTable(model);
+		
+		model.addColumn("Origin");
+		model.addColumn("Destination");
+		model.addColumn("Date");
+		
+		for(int i = 0; i < 10; i++){
+			model.insertRow(i,new Object[] {"test","test","test"});
+		}
+		
+		scrollPane.setViewportView(table);
+		
+		JButton btnAddFlight = new JButton("Add Flight");
+		btnAddFlight.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.getContentPane().removeAll(); 
+				adminEditAdd(frame);
+				frame.getContentPane().validate();
+				frame.getContentPane().repaint();
+			}
+		});
+		btnAddFlight.setBounds(606, 93, 89, 23);
+		frame.getContentPane().add(btnAddFlight);
+		
+		JButton btnEdit = new JButton("Edit");
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.getContentPane().removeAll(); 
+				adminEditAdd(frame);
+				frame.getContentPane().validate();
+				frame.getContentPane().repaint();		
+			}
+		});
+		btnEdit.setBounds(606, 142, 89, 23);
+		frame.getContentPane().add(btnEdit);
+		
+		JButton btnRemove = new JButton("Remove");
+		btnRemove.setBounds(606, 190, 89, 23);
+		frame.getContentPane().add(btnRemove);
+		
+    }
+    
+    public void adminEditAdd(JFrame frame){
+    	contentPane = new JPanel();
+    	user_logout(frame);
+		
+    	frame.getContentPane().setLayout(null);
+		frame.getContentPane().add(contentPane);
+		
+		txtOrigin = new JTextField();
+		txtOrigin.setBounds(119, 83, 178, 20);
+		frame.getContentPane().add(txtOrigin);
+		txtOrigin.setColumns(10);
+		
+		txtDestination = new JTextField();
+		txtDestination.setColumns(10);
+		txtDestination.setBounds(409, 83, 178, 20);
+		frame.getContentPane().add(txtDestination);
+		
+		txtDepartureTime = new JTextField();
+		txtDepartureTime.setColumns(10);
+		txtDepartureTime.setBounds(119, 191, 178, 20);
+		frame.getContentPane().add(txtDepartureTime);
+		
+		txtArrivalTime = new JTextField();
+		txtArrivalTime.setColumns(10);
+		txtArrivalTime.setBounds(409, 191, 178, 20);
+		frame.getContentPane().add(txtArrivalTime);
+		
+		txtPricePerSeat = new JTextField();
+		txtPricePerSeat.setColumns(10);
+		txtPricePerSeat.setBounds(409, 245, 178, 20);
+		frame.getContentPane().add(txtPricePerSeat);
+		
+		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.getContentPane().removeAll(); 
+				adminMain(frame);
+				frame.getContentPane().validate();
+				frame.getContentPane().repaint();
+			}
+		});
+		btnSubmit.setBounds(304, 336, 89, 23);
+		frame.getContentPane().add(btnSubmit);
+		
+		JDateChooser dateDeparture = new JDateChooser();
+		dateDeparture.setBounds(119, 135, 178, 20);
+		frame.getContentPane().add(dateDeparture);
+		
+		JDateChooser dateArrival = new JDateChooser();
+		dateArrival.setBounds(409, 135, 178, 20);
+		frame.getContentPane().add(dateArrival);
+		
+		JSpinner spNrOfSeats = new JSpinner();
+		spNrOfSeats.setBounds(119, 245, 89, 20);
+		frame.getContentPane().add(spNrOfSeats);
+		
+		JLabel lblOrigin = new JLabel("Origin");
+		lblOrigin.setBounds(119, 61, 46, 14);
+		frame.getContentPane().add(lblOrigin);
+		
+		JLabel lblDestination = new JLabel("Destination");
+		lblDestination.setBounds(408, 61, 89, 14);
+		frame.getContentPane().add(lblDestination);
+		
+		JLabel lblDepartureDate = new JLabel("Departure date");
+		lblDepartureDate.setBounds(119, 114, 89, 14);
+		frame.getContentPane().add(lblDepartureDate);
+		
+		JLabel lblArrivalDate = new JLabel("Arrival Date");
+		lblArrivalDate.setBounds(409, 110, 151, 14);
+		frame.getContentPane().add(lblArrivalDate);
+		
+		JLabel lblDepartureTime = new JLabel("Departure Time");
+		lblDepartureTime.setBounds(119, 166, 124, 14);
+		frame.getContentPane().add(lblDepartureTime);
+		
+		JLabel lblArrivalTime = new JLabel("Arrival Time");
+		lblArrivalTime.setBounds(409, 166, 124, 14);
+		frame.getContentPane().add(lblArrivalTime);
+		
+		JLabel lblSeats = new JLabel("Seats");
+		lblSeats.setBounds(119, 222, 46, 14);
+		frame.getContentPane().add(lblSeats);
+		
+		JLabel lblPricePerSeat = new JLabel("Price per seat");
+		lblPricePerSeat.setBounds(409, 220, 96, 14);
+		frame.getContentPane().add(lblPricePerSeat);
+    }
+    
     
 }
