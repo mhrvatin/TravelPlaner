@@ -690,7 +690,5 @@ public class main {
 		JLabel lblPricePerSeat = new JLabel("Price per seat");
 		lblPricePerSeat.setBounds(409, 220, 96, 14);
 		frame.getContentPane().add(lblPricePerSeat);
-    }
-    
-    
+    }   
 }
