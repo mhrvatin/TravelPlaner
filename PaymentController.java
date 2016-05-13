@@ -1,3 +1,5 @@
+package travelplanner;
+
 import java.sql.*;
 
 public class PaymentController{
@@ -48,8 +50,9 @@ public class PaymentController{
                 // connection close failed.
                 System.err.println(e);
             }
-
+        }
         return true;
     }
 }
+
 

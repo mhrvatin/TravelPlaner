@@ -1,3 +1,5 @@
+package travelplanner;
+
 import java.sql.*;
 
 public class BankMock {
