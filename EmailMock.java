@@ -7,7 +7,7 @@ public class EmailMock{
     public EmailMock() {
         
     }
-    public boolean sendEmail(String email, String recipient){
+    public boolean sendEmail(String email, String message){
         
         return true;
     }

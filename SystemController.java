@@ -1,5 +1,8 @@
 package travelplanner;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class SystemController {
     public String user;
     private FlightController flight;
@@ -10,22 +13,48 @@ public class SystemController {
     SystemController() {
     }
     
-    public boolean login(String username, String password) {
-        this.account = new AccountController(username, password);
+    public boolean login(String username, String password) throws NoSuchAlgorithmException {
+        byte[] bytes;
+
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(password.getBytes());
+        bytes = md.digest();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < bytes.length; i++) {
+            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        String hashedPassword = sb.toString();
+        
+        this.account = new AccountController(username, hashedPassword);
         
         this.user = account.login();
         
-        boolean ret = false;
+        boolean ret = true;
         
         if (this.user.equals("")) {
-            ret = true;
+            ret = false;
         }
         
         return ret;
     }
     
-    public void register(String username, String password, String firstName, String lastName) {
-        this.account = new AccountController(username, password);
+    public void register(String username, String password, String firstName, String lastName) throws NoSuchAlgorithmException {
+        byte[] bytes;
+
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(password.getBytes());
+        bytes = md.digest();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < bytes.length; i++) {
+            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        String hashedPassword = sb.toString();
+        
+        this.account = new AccountController(username, hashedPassword);
         
         boolean result = account.register(firstName, lastName);
     }
@@ -38,16 +67,10 @@ public class SystemController {
     
     // Does not exist in FlightController
     // Should it exist?
-    /*public String[][] getFlights(String origin, String destination, String date) {
+    public String[][] getFlights(String origin, String destination, String date) {
         this.flight = new FlightController();
         
         return this.flight.getFlights(origin, destination, date);
-    }*/
-    
-    public String[][] getFlights(String origin, String destination, String date, String returnDate) {
-        this.flight = new FlightController();
-        
-        return this.flight.getFlights(origin, destination, returnDate, date);
     }
     
     public String[] getFlights(int id) {
@@ -59,7 +82,8 @@ public class SystemController {
     public boolean addFlight(String origin, String destination, String deptDate, String deptTime, String travelTime, int nrOfSeats) {
         this.flight = new FlightController();
         
-        return this.flight.addFlight(origin, destination, deptDate, travelTime, nrOfSeats, nrOfSeats);
+        //return this.flight.addFlight(origin, destination, deptDate, travelTime, nrOfSeats, nrOfSeats);
+        return true;
     }
     
     public boolean removeFlight(int id) {
@@ -71,6 +95,7 @@ public class SystemController {
     public boolean updateFlight(String origin, String destination, String deptDate, String deptTime, String travelTime, int nrOfSeats) {
         this.flight = new FlightController();
         
-        return this.flight.updateFlight(origin, destination, deptDate, travelTime, nrOfSeats, nrOfSeats);
+        //return this.flight.updateFlight(origin, destination, deptDate, travelTime, nrOfSeats, nrOfSeats);
+        return true;
     }
 }

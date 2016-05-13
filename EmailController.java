@@ -16,8 +16,7 @@ public class EmailController {
     public EmailController(String user){
         this.user=user;
         mock = new EmailMock();
-        //this.testDbConnection();
-        this.sendRecipt();
+        
     }
     
     //TASK: Sends the reciept to the email adress of the current logged in user after a successful booking
@@ -162,11 +161,19 @@ public class EmailController {
         + "Hello " + name + " " +lastName +"! the transaction id is " + transaction +" on your account "
         +" with the register email: " + email ;
         
-        System.out.println(reciept);
+        
         
         return reciept;
         
     }
     
+    public boolean verify(String verifyHash)
+    {
+        
+        String message = "Use this hash to verufy your account: " + verifyHash;
+        
+        return mock.sendEmail(this.user, message);
+        
+    }
     
-    
+}

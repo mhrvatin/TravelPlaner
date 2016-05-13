@@ -1,4 +1,10 @@
-import java.sql.*;
+package travelplanner;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class PaymentController{
     String dbPath = "/home/freak/TravelPlanner/pa1415_group.e2_travelplanner.db";
@@ -47,8 +53,9 @@ public class PaymentController{
                 // connection close failed.
                 System.err.println(e);
             }
-
+        }
         return true;
     }
 }
+
 

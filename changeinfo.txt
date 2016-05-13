@@ -10,3 +10,8 @@ EmailController:
 FlightController:*
 - Added functions for Database functions
 - Added deptTime to functions parameters
+
+—————Updated class diagram 13/05-2016—————————————
+
+EmailController:
+* add verify(String verifyHash) function
