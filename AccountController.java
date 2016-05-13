@@ -11,8 +11,7 @@ public class AccountController {
 	
 	private String user;
 	private String password;
-        private String dbPath = "E:/massa goa grejor/Skola/PA1415/TravelPlanner_netbeans.project/travelplanner/src/TravelPlanner/pa1415_group.e2_travelplanner.db";
-	
+    
 	public AccountController(String user, String password)
 	{
 		this.user = user;
@@ -33,26 +32,41 @@ public class AccountController {
 		    statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
 		    ResultSet rs = statement.executeQuery("SELECT first_name, last_name,"
-		    		+ " email, user_password_hash FROM users WHERE email = '"
+		    		+ " email, user_password_hash, account_active, admin  FROM users WHERE email = '"
 		    		+ this.user + "'");
 		    
-		    
-		        //LOGIN
-		        String pwdHash = rs.getString("user_password_hash");
-		        if(pwdHash.equals(password))
+		    String pwdHash = rs.getString("user_password_hash");
+		    	//LOGIN ADMIN
+		    	if(rs.getString("admin").equals("1"))
+		    	{
+		    		
+		    		ret = "Admin";
+		    		String fullName = "Admin";
+		    		
+		    	}
+		        //LOGIN USER
+		        if(rs.getString("accout_active").equals("0"))
 		        {
+		        	
+		        	ret = "ACTIVATE";
+		        	
+		        } else if(pwdHash.equals(password)){
+		        	
 		        	ret = this.user;
 		        	String fullName = (rs.getString("first_name") + " " + rs.getString("last_name"));
+		        	
 		        }else{
-		        	ret = "PASSWORD";		        	
+		        	
+		        	ret = "";	 //Om lössen inte stämmer överen
+		        	
 		        }
 		        
 		} catch(SQLException e) {
 		    // if the error message is "out of memory",
 		    // it probably means no database file is found
 		    System.err.println(e.getMessage());
-		    ret = e.getMessage();
-		    return ret;		//Returnerar felmeddelande
+		    ret = "";
+		    return ret;		//Retur för om användaren inte hittas
 		} finally {
 		    try {
 		        if(connection != null)
@@ -114,6 +128,7 @@ public class AccountController {
 	public boolean register(String firstName, String lastName)
 	{
 		boolean success = false;
+		
 		success = addUserToDB(firstName, lastName);
 		
 		return success;
@@ -124,6 +139,7 @@ public class AccountController {
 		boolean ret = false;
 		String user = this.user;
 		String password = this.password;
+		String activationHash = "";
 		
 		Connection connection = null;
 
@@ -132,13 +148,26 @@ public class AccountController {
 		    Statement statement = connection.createStatement();
 		    statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-		    statement.executeUpdate("INSERT INTO users VALUES(" + null + ", " +
+		    //CHECK IF A USER WITH THE EMAIL ALREADY EXISTS
+		    ResultSet rs = statement.executeQuery("SELECT email FROM users WHERE email = '" + this.user + "'");	
+		    
+		    //IF NO SUCH USER EXISTS ADD THE USER
+		    if( !rs.isBeforeFirst() ) {
+		    	
+		    	statement.executeUpdate("INSERT INTO users VALUES(" + null + ", " +
 				"'" + user + "', " +
 			    "'" + password + "', " +
+			    "'" + activationHash + "', " +
+			    "'" + 0 + "', " +
+			    "'" + 0 + "', " +
 			    "'" + firstName + "', " +
 			    "'" + lastName + "' )"); 
 		    
-		    ret = true;		    
+		    	ret = true;
+		    	
+		    }
+		    
+		    		    
 		} catch(SQLException e) {
 		    // if the error message is "out of memory",
 		    // it probably means no database file is found
