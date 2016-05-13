@@ -9,11 +9,12 @@ public class testEmailController {
         // TODO Auto-generated method stub
         String userName="marcus@hrvatin.se";
         EmailController emailTest=new EmailController(userName);
+        
+        emailTest.sendRecipt();
     }
     
     
     
 }
-
 
 

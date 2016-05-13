@@ -16,8 +16,7 @@ public class EmailController {
     public EmailController(String user){
         this.user=user;
         mock = new EmailMock();
-        //this.testDbConnection();
-        this.sendRecipt();
+        
     }
     
     //TASK: Sends the reciept to the email adress of the current logged in user after a successful booking
