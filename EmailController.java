@@ -11,7 +11,6 @@ public class EmailController {
     
     private String user;
     private EmailMock mock;
-    private String dbPath = "/pa1415_group.e2_travelplanner.db";
     
     public EmailController(String user){
         this.user=user;
@@ -29,7 +28,7 @@ public class EmailController {
         
         try {
             
-            connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbPath);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             

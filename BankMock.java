@@ -3,8 +3,6 @@ package travelplanner;
 import java.sql.*;
 
 public class BankMock {
-    String dbPath = "/home/freak/TravelPlanner/pa1415_group.e2_travelplanner.db";
-
     BankMock() {
 
     }
@@ -13,7 +11,7 @@ public class BankMock {
         Connection connection = null;
         Boolean payed = false;
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             ResultSet rs = statement.executeQuery("select * FROM transcations WHERE cardnr=" + cardNr);
