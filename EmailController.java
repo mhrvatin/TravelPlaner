@@ -161,11 +161,22 @@ public class EmailController {
         + "Hello " + name + " " +lastName +"! the transaction id is " + transaction +" on your account "
         +" with the register email: " + email ;
         
-        System.out.println(reciept);
+        
         
         return reciept;
         
     }
     
+    public boolean verify(String verifyHash)
+    {
+        
+        String message = "Use this hash to verufy your account: " + verifyHash;
+        
+        return mock.sendEmail(this.user, message);
+        
+    }
+    
+}
+
     
     
