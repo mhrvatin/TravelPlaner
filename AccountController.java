@@ -34,26 +34,23 @@ public class AccountController {
 		    		+ " email, user_password_hash FROM users WHERE email = '"
 		    		+ this.user + "'");
 		    
-		        // read the result set
-		        /*
-		        System.out.println("first_name = " + rs.getString("first_name"));
-		        System.out.println("last_name = " + rs.getString("last_name"));
-		        System.out.println("email = " + rs.getString("email"));
-		        System.out.println("user_password_hash = " + rs.getString("user_password_hash"));
-		        */
-		        
+		    
 		        //LOGIN
 		        String pwdHash = rs.getString("user_password_hash");
 		        if(pwdHash.equals(password))
 		        {
 		        	ret = this.user;
 		        	String fullName = (rs.getString("first_name") + " " + rs.getString("last_name"));
+		        }else{
+		        	ret = "PASSWORD";		        	
 		        }
 		        
 		} catch(SQLException e) {
 		    // if the error message is "out of memory",
 		    // it probably means no database file is found
 		    System.err.println(e.getMessage());
+		    ret = e.getMessage();
+		    return ret;		//Returnerar felmeddelande
 		} finally {
 		    try {
 		        if(connection != null)

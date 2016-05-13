@@ -166,6 +166,7 @@ public class EmailController {
         return reciept;
         
     }
+}
     
     public boolean verify(String verifyHash)
     {
