@@ -1,14 +1,9 @@
 package travelplanner;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import com.toedter.calendar.JCalendar;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,10 +19,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JDateChooser;
+import java.util.Arrays;
+import java.util.Calendar;
+import javax.swing.JOptionPane;
 
 public class main {
-	private JTable table;
-	private JPanel contentPane;
+    private JTable table;
+    private JPanel contentPane;
     private JFrame frame;
     private JTextField txtOrigin;
     private JTextField txtDestination;
@@ -88,6 +86,11 @@ public class main {
         txtDestination.setColumns(10);
         txtDestination.setBounds(376, 107, 144, 20);
         frame.getContentPane().add(txtDestination);
+        
+        JDateChooser dateOrigin = new JDateChooser();
+        dateOrigin.setDateFormatString("yyyy-mm-dd");
+        dateOrigin.setBounds(94, 159, 95, 20);
+        frame.getContentPane().add(dateOrigin);
 
         JLabel lblOrigin = new JLabel("Origin");
         lblOrigin.setBounds(94, 82, 46, 14);
@@ -97,19 +100,19 @@ public class main {
         lblDestination.setBounds(376, 82, 138, 14);
         frame.getContentPane().add(lblDestination);
 
-
         JButton btnSearch = new JButton("Search");
         btnSearch.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
-                //searchGUI test = new searchGUI();
-                //test.main();
-            	frame.getContentPane().removeAll();
-            	login_register(frame);
-            	search(frame);
-            	frame.getContentPane().revalidate();
-            	frame.getContentPane().repaint();
-            	//frame.repaint();
-            	
+                SystemController sc = new SystemController();
+                String origin = txtOrigin.getText();
+                String destination = txtDestination.getText();
+                
+                
+                String date = dateOrigin.getDate().toString();
+                String[][] res = sc.getFlights(origin, destination, date);
+                
+                System.out.println(Arrays.deepToString(res));
             }
         });
         btnSearch.setBounds(253, 304, 89, 23);
@@ -118,10 +121,6 @@ public class main {
         JCheckBox chckbxReturnFlight = new JCheckBox("Return Flight");
         chckbxReturnFlight.setBounds(376, 304, 97, 23);
         frame.getContentPane().add(chckbxReturnFlight);
-
-        JDateChooser dateOrigin = new JDateChooser();
-        dateOrigin.setBounds(94, 159, 95, 20);
-        frame.getContentPane().add(dateOrigin);
 
         JDateChooser dateReturn = new JDateChooser();
         dateReturn.setEnabled(false);
@@ -138,8 +137,7 @@ public class main {
         btnAdminTest.setBounds(10, 10, 111, 23);
         frame.getContentPane().add(btnAdminTest);
     }
-    
-    
+     
     public void login_register(JFrame frame){
     	 JButton btnLogin = new JButton("Login");
          btnLogin.addActionListener(new ActionListener() {
@@ -167,10 +165,9 @@ public class main {
     }
     
     public void login(JFrame frame){
-    	
     	contentPane = new JPanel();
-		frame.getContentPane().setLayout(null);
-		frame.getContentPane().add(contentPane);
+        frame.getContentPane().setLayout(null);
+        frame.getContentPane().add(contentPane);
 
         usernameField = new JTextField();
         usernameField.setBounds(127, 107, 196, 20);
@@ -183,7 +180,7 @@ public class main {
         passwordField.setColumns(10);
 
         JLabel lblPassword = new JLabel("Password");
-        lblPassword.setBounds(127, 150, 46, 14);
+        lblPassword.setBounds(127, 150, 100, 14);
         frame.getContentPane().add(lblPassword);
 
         JLabel lblUsername = new JLabel("Username");
@@ -198,18 +195,18 @@ public class main {
                     boolean res = sc.login(usernameField.getText(), passwordField.getText());
                     
                     if (res) {
-                        System.out.println("res true, successfully logged in");
                         frame.getContentPane().removeAll();
                         initialize(frame);
                         frame.getContentPane().revalidate();
                     	frame.getContentPane().repaint();
-                        
                     } else {
-                        System.out.println("res false");
-                        frame.getContentPane().removeAll();
+                        /*frame.getContentPane().removeAll();
                         initialize(frame);
                         frame.getContentPane().revalidate();
-                    	frame.getContentPane().repaint();
+                    	frame.getContentPane().repaint();*/
+
+                        JOptionPane.showMessageDialog(frame, "Wrong username/password",
+                                "Couldn't sign in", JOptionPane.ERROR_MESSAGE);
                     }
                     
                 } catch (NoSuchAlgorithmException ex) {
@@ -223,8 +220,8 @@ public class main {
     
     public void register(JFrame frame){
     	contentPane = new JPanel();
-		frame.getContentPane().setLayout(null);
-		frame.getContentPane().add(contentPane);
+        frame.getContentPane().setLayout(null);
+        frame.getContentPane().add(contentPane);
         
         nameField = new JTextField();
         nameField.setBounds(173, 71, 156, 20);
@@ -278,7 +275,6 @@ public class main {
                     try {
                         sc.register(emailField.getText(), passwordField.getText(), nameField.getText(), lastNameField.getText());
                         frame.getContentPane().removeAll();
-                        
                     	frame.getContentPane().repaint();
                     } catch (NoSuchAlgorithmException ex) {
                         Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -293,162 +289,165 @@ public class main {
     }
     
     public void search(JFrame frame){
-    	
+        contentPane = new JPanel();
+        frame.getContentPane().setLayout(null);
+        frame.getContentPane().add(contentPane);
 
-		contentPane = new JPanel();
-		
-		
-		frame.getContentPane().setLayout(null);
-		frame.getContentPane().add(contentPane);
-		
-		JButton btnSearch = new JButton("Search");
-		btnSearch.setBounds(527, 48, 89, 23);
-		frame.getContentPane().add(btnSearch);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(66, 82, 550, 321);
-		frame.getContentPane().add(scrollPane);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setBounds(66, 82, 550, 321);
+        frame.getContentPane().add(scrollPane);
 
-		DefaultTableModel model = new DefaultTableModel();
-		
-		table = new JTable(model);
-		
-		model.addColumn("Origin");
-		model.addColumn("Destination");
-		model.addColumn("Date");
-		
-		for(int i = 0; i < 10; i++){
-			model.insertRow(i,new Object[] {"test","test","test"});
-		}
-		
-		scrollPane.setViewportView(table);
-		
-		
-		txtOrigin = new JTextField();
-		txtOrigin.setBounds(66, 49, 161, 20);
-		frame.getContentPane().add(txtOrigin);
-		txtOrigin.setColumns(10);
-		
-		txtDestination = new JTextField();
-		txtDestination.setColumns(10);
-		txtDestination.setBounds(237, 49, 164, 20);
-		frame.getContentPane().add(txtDestination);
-		
-		JDateChooser dateOrigin = new JDateChooser();
-		dateOrigin.setBounds(411, 49, 95, 20);
-		frame.getContentPane().add(dateOrigin);
-		
-		JLabel lblOrigin = new JLabel("Origin");
-		lblOrigin.setBounds(66, 24, 46, 14);
-		frame.getContentPane().add(lblOrigin);
-		
-		JLabel lblDestination = new JLabel("Destination");
-		lblDestination.setBounds(237, 24, 100, 14);
-		frame.getContentPane().add(lblDestination);
-		
-		JButton btnBook = new JButton("Book");
-		btnBook.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.getContentPane().removeAll();
-            	book(frame);
-            	frame.getContentPane().repaint();
-			}
-		});
-		btnBook.setBounds(280, 424, 89, 23);
-		frame.getContentPane().add(btnBook);
+        DefaultTableModel model = new DefaultTableModel();
+
+        table = new JTable(model);
+
+        model.addColumn("Origin");
+        model.addColumn("Destination");
+        model.addColumn("Date");
+
+        for(int i = 0; i < 10; i++){
+            model.insertRow(i,new Object[] {"test","test","test"});
+        }
+
+        scrollPane.setViewportView(table);
+
+        txtOrigin = new JTextField();
+        txtOrigin.setBounds(66, 49, 161, 20);
+        frame.getContentPane().add(txtOrigin);
+        txtOrigin.setColumns(10);
+
+        txtDestination = new JTextField();
+        txtDestination.setColumns(10);
+        txtDestination.setBounds(237, 49, 164, 20);
+        frame.getContentPane().add(txtDestination);
+
+        JDateChooser dateOrigin = new JDateChooser();
+        dateOrigin.setBounds(411, 49, 95, 20);
+        frame.getContentPane().add(dateOrigin);
+
+        JLabel lblOrigin = new JLabel("Origin");
+        lblOrigin.setBounds(66, 24, 46, 14);
+        frame.getContentPane().add(lblOrigin);
+
+        JLabel lblDestination = new JLabel("Destination");
+        lblDestination.setBounds(237, 24, 100, 14);
+        frame.getContentPane().add(lblDestination);
+        
+        JButton btnSearch = new JButton("Search");
+        btnSearch.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SystemController sc = new SystemController();
+                String origin = lblOrigin.getText();
+                String destination = lblDestination.getText();
+                String date = dateOrigin.getDateFormatString();
+                System.out.println(date);
+                //sc.getFlights(origin, destination, date);
+            }
+        });
+        btnSearch.setBounds(527, 48, 89, 23);
+        frame.getContentPane().add(btnSearch);
+
+        JButton btnBook = new JButton("Book");
+        btnBook.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.getContentPane().removeAll();
+                book(frame);
+                frame.getContentPane().repaint();
+            }
+        });
+        btnBook.setBounds(280, 424, 89, 23);
+        frame.getContentPane().add(btnBook);
     }
     
     public void book(JFrame frame){
     	contentPane = new JPanel();
 		
-		frame.getContentPane().setLayout(null);
-		frame.getContentPane().add(contentPane);
+        frame.getContentPane().setLayout(null);
+        frame.getContentPane().add(contentPane);
 
-		txtOrigin = new JTextField();
-	    txtOrigin.setBounds(81, 87, 176, 20);
-	    frame.getContentPane().add(txtOrigin);
-	    txtOrigin.setColumns(10);
-	
-	    JTextField txtDestination = new JTextField();
-	    txtDestination.setColumns(10);
-	    txtDestination.setBounds(81, 144, 176, 20);
-	    frame.getContentPane().add(txtDestination);
-	
-	    txtPrice = new JTextField();
-	    txtPrice.setColumns(10);
-	    txtPrice.setBounds(81, 261, 58, 20);
-	    frame.getContentPane().add(txtPrice);
-	
-	    txtDate = new JTextField();
-	    txtDate.setBounds(399, 87, 86, 20);
-	    frame.getContentPane().add(txtDate);
-	    txtDate.setColumns(10);
-	
-	    txtTime = new JTextField();
-	    txtTime.setColumns(10);
-	    txtTime.setBounds(559, 87, 86, 20);
-	    frame.getContentPane().add(txtTime);
-	
-	    txtDate_2 = new JTextField();
-	    txtDate_2.setColumns(10);
-	    txtDate_2.setBounds(399, 144, 86, 20);
-	    frame.getContentPane().add(txtDate_2);
+        txtOrigin = new JTextField();
+        txtOrigin.setBounds(81, 87, 176, 20);
+        frame.getContentPane().add(txtOrigin);
+        txtOrigin.setColumns(10);
 
-	    txtTime_2 = new JTextField();
-	    txtTime_2.setColumns(10);
-	    txtTime_2.setBounds(559, 144, 86, 20);
-	    frame.getContentPane().add(txtTime_2);
-	    
-	    JLabel lblOrigin = new JLabel("Origin");
-	    lblOrigin.setBounds(81, 62, 46, 14);
-	    frame.getContentPane().add(lblOrigin);
-	    
-	    JLabel lblDestination = new JLabel("Destination");
-	    lblDestination.setBounds(81, 118, 136, 14);
-	    frame.getContentPane().add(lblDestination);
-	    
-	    JLabel lblEnterPassengers = new JLabel("Enter Nr Of Passengers");
-	    lblEnterPassengers.setBounds(81, 179, 136, 14);
-	    frame.getContentPane().add(lblEnterPassengers);
-	    
-	    JLabel lblPrice = new JLabel("Price");
-	    lblPrice.setBounds(81, 235, 46, 14);
-	    frame.getContentPane().add(lblPrice);
-	    
-	    JLabel lblDate = new JLabel("Date");
-	    lblDate.setBounds(399, 62, 46, 14);
-	    frame.getContentPane().add(lblDate);
-	    
-	    JLabel lblDate_2 = new JLabel("Date");
-	    lblDate_2.setBounds(399, 118, 46, 14);
-	    frame.getContentPane().add(lblDate_2);
-	    
-	    JLabel lblTime = new JLabel("Time");
-	    lblTime.setBounds(559, 62, 46, 14);
-	    frame.getContentPane().add(lblTime);
-	    
-	    JLabel lblTime_2 = new JLabel("Time");
-	    lblTime_2.setBounds(559, 119, 46, 14);
-	    frame.getContentPane().add(lblTime_2);
-	    
-	    JSpinner spPassengers = new JSpinner();
-	    spPassengers.setEnabled(true);
-	    
-	    
-	    spPassengers.setBounds(81, 204, 29, 20);
-	    frame.getContentPane().add(spPassengers);
-	    frame.getContentPane().revalidate();
-	    JButton btnBook = new JButton("Book");
-	    btnBook.addActionListener(new ActionListener() {
-	        public void actionPerformed(ActionEvent e) {     
-	        	spPassengers.setEnabled(true);
-	        	spPassengers.repaint();
-	         }
-	     });
-	    btnBook.setBounds(278, 362, 89, 23);
-	    frame.getContentPane().add(btnBook);
-	
-	}
-    
+        JTextField txtDestination = new JTextField();
+        txtDestination.setColumns(10);
+        txtDestination.setBounds(81, 144, 176, 20);
+        frame.getContentPane().add(txtDestination);
+
+        txtPrice = new JTextField();
+        txtPrice.setColumns(10);
+        txtPrice.setBounds(81, 261, 58, 20);
+        frame.getContentPane().add(txtPrice);
+
+        txtDate = new JTextField();
+        txtDate.setBounds(399, 87, 86, 20);
+        frame.getContentPane().add(txtDate);
+        txtDate.setColumns(10);
+
+        txtTime = new JTextField();
+        txtTime.setColumns(10);
+        txtTime.setBounds(559, 87, 86, 20);
+        frame.getContentPane().add(txtTime);
+
+        txtDate_2 = new JTextField();
+        txtDate_2.setColumns(10);
+        txtDate_2.setBounds(399, 144, 86, 20);
+        frame.getContentPane().add(txtDate_2);
+
+        txtTime_2 = new JTextField();
+        txtTime_2.setColumns(10);
+        txtTime_2.setBounds(559, 144, 86, 20);
+        frame.getContentPane().add(txtTime_2);
+
+        JLabel lblOrigin = new JLabel("Origin");
+        lblOrigin.setBounds(81, 62, 46, 14);
+        frame.getContentPane().add(lblOrigin);
+
+        JLabel lblDestination = new JLabel("Destination");
+        lblDestination.setBounds(81, 118, 136, 14);
+        frame.getContentPane().add(lblDestination);
+
+        JLabel lblEnterPassengers = new JLabel("Enter Nr Of Passengers");
+        lblEnterPassengers.setBounds(81, 179, 136, 14);
+        frame.getContentPane().add(lblEnterPassengers);
+
+        JLabel lblPrice = new JLabel("Price");
+        lblPrice.setBounds(81, 235, 46, 14);
+        frame.getContentPane().add(lblPrice);
+
+        JLabel lblDate = new JLabel("Date");
+        lblDate.setBounds(399, 62, 46, 14);
+        frame.getContentPane().add(lblDate);
+
+        JLabel lblDate_2 = new JLabel("Date");
+        lblDate_2.setBounds(399, 118, 46, 14);
+        frame.getContentPane().add(lblDate_2);
+
+        JLabel lblTime = new JLabel("Time");
+        lblTime.setBounds(559, 62, 46, 14);
+        frame.getContentPane().add(lblTime);
+
+        JLabel lblTime_2 = new JLabel("Time");
+        lblTime_2.setBounds(559, 119, 46, 14);
+        frame.getContentPane().add(lblTime_2);
+
+        JSpinner spPassengers = new JSpinner();
+        spPassengers.setEnabled(true);
+
+
+        spPassengers.setBounds(81, 204, 29, 20);
+        frame.getContentPane().add(spPassengers);
+        frame.getContentPane().revalidate();
+        JButton btnBook = new JButton("Book");
+        btnBook.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {     
+                spPassengers.setEnabled(true);
+                spPassengers.repaint();
+             }
+         });
+        btnBook.setBounds(278, 362, 89, 23);
+        frame.getContentPane().add(btnBook);
+    }
 }
