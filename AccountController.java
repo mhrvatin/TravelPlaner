@@ -7,7 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
-public class AccountController {	
+public class AccountController {
+	
 	private String user;
 	private String password;
         private String dbPath = "E:/massa goa grejor/Skola/PA1415/TravelPlanner_netbeans.project/travelplanner/src/TravelPlanner/pa1415_group.e2_travelplanner.db";
@@ -25,7 +26,9 @@ public class AccountController {
 		Connection connection = null;
 		
 		try {
-		    connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbPath);
+
+		    connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
+
 		    Statement statement = connection.createStatement();
 		    statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
@@ -69,7 +72,8 @@ public class AccountController {
 		Connection connection = null;
 
 		try {
-		    connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbPath);
+		    connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
+
 		    Statement statement = connection.createStatement();
 		    statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
@@ -124,7 +128,7 @@ public class AccountController {
 		Connection connection = null;
 
 		try {
-		    connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+		    connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
 		    Statement statement = connection.createStatement();
 		    statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
