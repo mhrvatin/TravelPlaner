@@ -1,45 +1,58 @@
 package travelplanner;
 
+//TRANSCATIONS_ID???
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
 
 public class PaymentController{
-    private BankMock bank;
-    private String user;
-    private int cardNr;
-    private int price;
+    private final BankMock bank;
+    private final String user;
+    private final int cardNr;
+    private final int price;
+    
     public PaymentController(){
-        bank=new BankMock();
-        cardNr=0;
-        price=0;
-        user="";
+        this.bank = new BankMock();
+        this.cardNr = 0;
+        this.price = 0;
+        this.user = "";
     }
     public PaymentController(int cardNr, int price, String user){
-        bank=new BankMock();
-        this.cardNr=cardNr;
-        this.price=price;
-        this.user=user;
+        this.bank = new BankMock();
+        this.cardNr = cardNr;
+        this.price = price;
+        this.user = user;
     }
     public Boolean makePayment() {
-        Boolean payed=false;
-        if(cardNr != 0 && user==""){
-           payed = bank.makePayment(cardNr,price);
+        boolean payed=false;
+        
+        if(this.cardNr != 0 && this.user.equals("")) {
+           payed = this.bank.makePayment(this.cardNr, this.price);
         }
-        if(payed){
+        
+        if(payed) {
             logTranscation();
         }
+        
         return payed;
     }
-    private Boolean logTranscation(){
+    
+    private boolean logTranscation(){
         Connection connection = null;
+        
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
-            statement.executeUpdate("INSERT INTO bank VALUES (" + cardNr +"," + price +"," + user +")");
+            statement.executeUpdate(
+                "INSERT INTO transcations (email, price, date  VALUES (" +
+                this.user + ", " +
+                this.price + ", " +
+                Calendar.getInstance().getTime() + ")"
+            );
+            
         } catch(SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found

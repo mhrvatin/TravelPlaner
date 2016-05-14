@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FlightController {
@@ -118,7 +117,7 @@ public class FlightController {
         return flight;
     }
 	
-    private ArrayList<ArrayList> dbGetFlights(String SQL) {
+    private ArrayList dbGetFlights(String SQL) {
         Connection connection = null;
         ArrayList<ArrayList<String>> flightList = new ArrayList<>();
         ArrayList<String> flights = new ArrayList<>();        
