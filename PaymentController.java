@@ -6,7 +6,6 @@ import java.sql.Statement;
 import java.util.Calendar;
 
 public class PaymentController{
-    String dbPath = "/home/freak/TravelPlanner/pa1415_group.e2_travelplanner.db";
     private BankMock bank;
     private String user;
     private int cardNr;
@@ -36,7 +35,7 @@ public class PaymentController{
     private Boolean logTranscation(){
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             statement.executeUpdate("INSERT INTO transcations (email, price, date  " +

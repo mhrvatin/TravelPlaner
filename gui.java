@@ -22,7 +22,7 @@ import com.toedter.calendar.JDateChooser;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 
-public class main {
+public class gui {
     private JTable table;
     private JPanel contentPane;
     private JFrame frame;
@@ -52,7 +52,7 @@ public class main {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    main window = new main();
+                    gui window = new gui();
                     window.frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -64,18 +64,23 @@ public class main {
     /**
      * Create the application.
      */
-    public main() {
+    public gui() {
     	frame = new JFrame();
         
-        initialize(frame);
+        initialize(frame,false);
     }
 
-    private void initialize(JFrame frame) {
+    private void initialize(JFrame frame,boolean login) {
     	frame.setBounds(100, 100, 723, 540);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
         
-        login_register(frame);
+        if(login == false){
+        	login_register(frame);
+        }else{
+        	user_logout(frame);
+        }
+        
 
         txtOrigin = new JTextField();
         txtOrigin.setBounds(94, 107, 144, 20);
@@ -172,17 +177,17 @@ public class main {
         lblUser.setBounds(345, 11, 150, 21);
         frame.getContentPane().add(lblUser);
 
-        JButton btnRegister = new JButton("Logout");
-        btnRegister.addActionListener(new ActionListener() {
+        JButton btnLogout = new JButton("Logout");
+        btnLogout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
            	frame.getContentPane().removeAll();
-            	initialize(frame);
+            	initialize(frame,false);
             	frame.getContentPane().revalidate();
             	frame.getContentPane().repaint();
             }
         });
-        btnRegister.setBounds(489, 11, 89, 21);
-        frame.getContentPane().add(btnRegister);
+        btnLogout.setBounds(489, 11, 89, 21);
+        frame.getContentPane().add(btnLogout);
     }
     
     public void login(JFrame frame){
@@ -217,7 +222,7 @@ public class main {
                     
                     if (res) {
                         frame.getContentPane().removeAll();
-                        initialize(frame);
+                        initialize(frame,true);
                         frame.getContentPane().revalidate();
                         frame.getContentPane().repaint();
                     } else {
@@ -226,7 +231,7 @@ public class main {
                                 "Couldn't sign in", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NoSuchAlgorithmException ex) {
-                    Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -292,9 +297,11 @@ public class main {
                     try {
                         sc.register(emailField.getText(), passwordField.getText(), nameField.getText(), lastNameField.getText());
                         frame.getContentPane().removeAll();
+                        initialize(frame, true);
+                        frame.getContentPane().validate();
                         frame.getContentPane().repaint();
                     } catch (NoSuchAlgorithmException ex) {
-                        Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
                     System.out.println("passwords doesn't match");
@@ -555,7 +562,7 @@ public class main {
         btnPay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.getContentPane().removeAll(); 
-                initialize(frame);
+                initialize(frame,true);
                 frame.getContentPane().validate();
                 frame.getContentPane().repaint();
             }
