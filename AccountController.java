@@ -1,4 +1,3 @@
-package travelplanner;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -57,7 +56,7 @@ public class AccountController {
 		        	
 		        }else{
 		        	
-		        	ret = "";	 //Om lössen inte stämmer överen
+		        	ret = "";	 //Om lï¿½ssen inte stï¿½mmer ï¿½veren
 		        	
 		        }
 		        
@@ -66,7 +65,7 @@ public class AccountController {
 		    // it probably means no database file is found
 		    System.err.println(e.getMessage());
 		    ret = "";
-		    return ret;		//Retur för om användaren inte hittas
+		    return ret;		//Retur fï¿½r om anvï¿½ndaren inte hittas
 		} finally {
 		    try {
 		        if(connection != null)

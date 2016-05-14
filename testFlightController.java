@@ -1,5 +1,3 @@
-package travelplanner;
-
 
 
 public class testFlightController {

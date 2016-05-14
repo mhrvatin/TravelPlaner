@@ -1,4 +1,3 @@
-package travelplanner;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
