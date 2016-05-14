@@ -19,13 +19,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JDateChooser;
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class gui {
     private JTable table;
     private JPanel contentPane;
-    private JFrame frame;
+    private final JFrame frame;
     private JTextField txtCardNr;
     private JTextField txtOrigin;
     private JTextField txtDestination;
@@ -40,10 +42,10 @@ public class gui {
     private JTextField txtTime;
     private JTextField txtDate_2;
     private JTextField txtTime_2;
-	private JTextField txtDepartureTime;
-	private JTextField txtArrivalTime;
-	private JTextField txtPricePerSeat;
-    private SystemController sc = new SystemController();
+    private JTextField txtDepartureTime;
+    private JTextField txtArrivalTime;
+    private JTextField txtPricePerSeat;
+    private final SystemController sc = new SystemController();
 
     /**
      * Launch the application.
@@ -66,7 +68,6 @@ public class gui {
      */
     public gui() {
     	frame = new JFrame();
-        
         initialize(frame,false);
     }
 
@@ -75,13 +76,12 @@ public class gui {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
         
-        if(login == false){
-        	login_register(frame);
-        }else{
-        	user_logout(frame);
+        if (login == false) {
+            login_register(frame);
+        } else {
+            user_logout(frame);
         }
         
-
         txtOrigin = new JTextField();
         txtOrigin.setBounds(94, 107, 144, 20);
         frame.getContentPane().add(txtOrigin);
@@ -93,7 +93,7 @@ public class gui {
         frame.getContentPane().add(txtDestination);
         
         JDateChooser dateOrigin = new JDateChooser();
-        dateOrigin.setDateFormatString("yyyy-mm-dd");
+        dateOrigin.setDateFormatString("yyyy-MM-dd");
         dateOrigin.setBounds(94, 159, 95, 20);
         frame.getContentPane().add(dateOrigin);
 
@@ -109,15 +109,14 @@ public class gui {
         btnSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                SystemController sc = new SystemController();
                 String origin = txtOrigin.getText();
                 String destination = txtDestination.getText();
+
+                Date dateString = dateOrigin.getDate();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                String formatedDate = format.format(dateString);
                 
-                
-                String date = dateOrigin.getDate().toString();
-                String[][] res = sc.getFlights(origin, destination, date);
-                
-                System.out.println(Arrays.deepToString(res));
+                ArrayList res = sc.getFlights(origin, destination, formatedDate);
             }
         });
         btnSearch.setBounds(253, 304, 89, 23);
@@ -136,7 +135,6 @@ public class gui {
         btnAdminTest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	frame.getContentPane().removeAll();
-            	
             	frame.getContentPane().revalidate();
             	frame.getContentPane().repaint();
             }
@@ -146,9 +144,9 @@ public class gui {
     }
     
     public void login_register(JFrame frame){
-    	 JButton btnLogin = new JButton("Login");
-         btnLogin.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
+    	JButton btnLogin = new JButton("Login");
+        btnLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
             	frame.getContentPane().removeAll();
              	login(frame);
              	frame.getContentPane().revalidate();
@@ -160,8 +158,8 @@ public class gui {
 
          JButton btnRegister = new JButton("Register");
          btnRegister.addActionListener(new ActionListener() {
-             public void actionPerformed(ActionEvent e) {
-            	frame.getContentPane().removeAll();
+            public void actionPerformed(ActionEvent e) {
+                frame.getContentPane().removeAll();
              	register(frame);
              	frame.getContentPane().revalidate();
              	frame.getContentPane().repaint();
@@ -172,8 +170,7 @@ public class gui {
     }
     
     public void user_logout(JFrame frame){
-    	
-    	JLabel lblUser = new JLabel("Welcome User: xxx");
+        JLabel lblUser = new JLabel("Welcome " + sc.user);
         lblUser.setBounds(345, 11, 150, 21);
         frame.getContentPane().add(lblUser);
 
@@ -186,7 +183,7 @@ public class gui {
             	frame.getContentPane().repaint();
             }
         });
-        btnLogout.setBounds(489, 11, 89, 21);
+        btnLogout.setBounds(500, 11, 89, 21);
         frame.getContentPane().add(btnLogout);
     }
     
@@ -226,9 +223,8 @@ public class gui {
                         frame.getContentPane().revalidate();
                         frame.getContentPane().repaint();
                     } else {
-                        
                         JOptionPane.showMessageDialog(frame, "Wrong username/password",
-                                "Couldn't sign in", JOptionPane.ERROR_MESSAGE);
+                            "Couldn't sign in", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NoSuchAlgorithmException ex) {
                     Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
@@ -293,9 +289,9 @@ public class gui {
         btnRegister.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (passwordField.getText().equals(passwordConfirmField.getText())) {
-                    
                     try {
-                        sc.register(emailField.getText(), passwordField.getText(), nameField.getText(), lastNameField.getText());
+                        sc.register(emailField.getText(), passwordField.getText(),
+                            nameField.getText(), lastNameField.getText());
                         frame.getContentPane().removeAll();
                         initialize(frame, true);
                         frame.getContentPane().validate();
@@ -361,9 +357,8 @@ public class gui {
         JButton btnSearch = new JButton("Search");
         btnSearch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SystemController sc = new SystemController();
-                String origin = lblOrigin.getText();
-                String destination = lblDestination.getText();
+                String origin = txtOrigin.getText();
+                String destination = txtDestination.getText();
                 String date = dateOrigin.getDateFormatString();
                 System.out.println(date);
                 //sc.getFlights(origin, destination, date);
@@ -420,12 +415,11 @@ public class gui {
 
         JButton btnBook_search = new JButton("Book");
         btnBook_search.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                        frame.getContentPane().removeAll();
-
-        book(frame);
-        frame.getContentPane().repaint();
-                }
+            public void actionPerformed(ActionEvent e) {
+                frame.getContentPane().removeAll();
+                book(frame);
+                frame.getContentPane().repaint();
+            }
         });
         btnBook_search.setBounds(280, 424, 89, 23);
         frame.getContentPane().add(btnBook_search);
@@ -515,11 +509,11 @@ public class gui {
         JButton btnBook = new JButton("Book");
         btnBook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {     
-                    frame.getContentPane().removeAll();
-            pay(frame);
-            frame.getContentPane().revalidate();
-            frame.getContentPane().repaint();
-             }
+                frame.getContentPane().removeAll();
+                pay(frame);
+                frame.getContentPane().revalidate();
+                frame.getContentPane().repaint();
+            }
          });
         btnBook.setBounds(278, 362, 89, 23);
         frame.getContentPane().add(btnBook);
@@ -610,7 +604,6 @@ public class gui {
         frame.getContentPane().add(scrollPane);
 
         DefaultTableModel model = new DefaultTableModel();
-
         table = new JTable(model);
 
         model.addColumn("Origin");

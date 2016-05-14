@@ -1,15 +1,17 @@
 SystemController:
-* changed returntype of getFlights() from String[][] to String[]
+* changed return type of getFlights() from String[][] to List
+* changed return type of getFlights() from String[] to List
 
 EmailController:
 * add a EmailMock instance
 * makeRecipt return a string
 
-
-
 FlightController:*
 - Added functions for Database functions
 - Added deptTime to functions parameters
+* changed return type of dbGetFlights() from String[][] to List
+* changed return type of getFlights() from String[][] to List
+* changed return type of getFlightsInfo() from String[] to List
 
 —————Updated class diagram 13/05-2016—————————————
 

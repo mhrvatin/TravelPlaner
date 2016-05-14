@@ -2,13 +2,16 @@ package travelplanner;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 public class SystemController {
-	public static String dbPath = "/home/macke/documents/skola/pa1415/TravelPlanner/pa1415_group.e2_travelplanner.db";
+    public static String dbPath = "e:/massa goa grejor/Skola/PA1415/" +
+        "TravelPlanner_netbeans.project/travelplanner/src/TravelPlanner/" +
+        "pa1415_group.e2_travelplanner.db";
 	
     public String user;
     private FlightController flight;
-    private EmailMock email;
+    //private EmailMock email;
     private AccountController account;
     private PaymentController pay;
     
@@ -30,7 +33,6 @@ public class SystemController {
         String hashedPassword = sb.toString();
         
         this.account = new AccountController(username, hashedPassword);
-        
         this.user = account.login();
         
         boolean ret = true;
@@ -67,15 +69,14 @@ public class SystemController {
         return this.flight.bookFlight(id, nrOfPassangers);
     }
     
-    // Does not exist in FlightController
-    // Should it exist?
-    public String[][] getFlights(String origin, String destination, String date) {
+    public ArrayList getFlights(String origin, String destination, String date) {
         this.flight = new FlightController();
         
+        //System.out.println(this.flight.getFlights(origin, destination, date));
         return this.flight.getFlights(origin, destination, date);
     }
     
-    public String[] getFlights(int id) {
+    public ArrayList getFlights(int id) {
         this.flight = new FlightController();
         
         return this.flight.getFlightsInfo(id);
