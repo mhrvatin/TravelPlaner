@@ -101,12 +101,6 @@ public class AccountController {
                     "'" + lastName + "' )"); 
 
                 ret = true;
-            } else {
-            	//In case of email already registered
-            	//Change return for register() and addUserToDB() to String
-            	//so that more info can be supplied
-            	// or remove this else segment
-            	ret = false;
             }
         } catch(SQLException e) {
             // if the error message is "out of memory",
