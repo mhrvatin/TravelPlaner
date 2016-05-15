@@ -32,19 +32,19 @@ public class AccountController {
                 "account_active, admin  FROM users WHERE email = '" + this.user + "'");
 
             String pwdHash = rs.getString("user_password_hash");
-            //LOGIN ADMIN
-            if(rs.getString("admin").equals("1")) {
-                ret = "Admin";
-                String fullName = "Admin";
-            }
-            //LOGIN USER
-            if(rs.getString("account_active").equals("0")) {
-                ret = "ACTIVATE";
-
-            } else if(pwdHash.equals(password)){
-                ret = this.user;
-                String fullName = (rs.getString("first_name") + " "
-                    + rs.getString("last_name"));
+            //LOGIN
+            if(pwdHash.equals(password)) {
+            	ret = this.user;
+        		String fullName = (rs.getString("first_name") + " "
+        				+ rs.getString("last_name"));
+        		
+            	if(rs.getString("admin").equals("1")) {
+            		ret = "Admin";
+            		fullName = "Admin";
+            	}
+            	if(rs.getString("account_active").equals("0")) {            		
+            		ret = "ACTIVATE";	
+            	}
             } else {
                 ret = "";   //password incorrect
             }
@@ -101,6 +101,12 @@ public class AccountController {
                     "'" + lastName + "' )"); 
 
                 ret = true;
+            } else {
+            	//In case of email already registered
+            	//Change return for register() and addUserToDB() to String
+            	//so that more info can be supplied
+            	// or remove this else segment
+            	ret = false;
             }
         } catch(SQLException e) {
             // if the error message is "out of memory",
@@ -118,12 +124,4 @@ public class AccountController {
 
         return ret;
     }
-
-    private String getUser()
-    {
-        return "tmp";
-    }
-
-    /**		TODO		**/
-    /**ADD fetchUserFromDB Function**/
 }
