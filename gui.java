@@ -138,6 +138,7 @@ public class gui {
         JButton btnAdminTest = new JButton("Admin test");
         btnAdminTest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	
             	frame.getContentPane().removeAll();
             	frame.getContentPane().revalidate();
             	frame.getContentPane().repaint();
@@ -336,7 +337,7 @@ public class gui {
         	if(flights[i][0] == null){
         		break;
         	}
-            model.insertRow(i,new Object[] {flights[i][0],flights[i][1],flights[i][2]});
+            model.insertRow(i,new Object[] {flights[i][1],flights[i][2],flights[i][3]});
         }
 
         scrollPane.setViewportView(table);
@@ -377,6 +378,7 @@ public class gui {
         btnSearch.setBounds(527, 48, 89, 23);
         frame.getContentPane().add(btnSearch);
 
+
         JButton btnBook = new JButton("Book");
         btnBook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -389,13 +391,14 @@ public class gui {
         });
         btnBook.setBounds(280, 424, 89, 23);
         frame.getContentPane().add(btnBook);
-      
+        if(sc.user == null)
+        	btnBook.setVisible(false);
     }
     
     public void book(JFrame frame,String[] flight){
     	contentPane = new JPanel();
     	user_logout(frame);
-        
+    	
         frame.getContentPane().setLayout(null);
         frame.getContentPane().add(contentPane);
 
@@ -484,13 +487,16 @@ public class gui {
 
         spPassengers.setBounds(81, 204, 29, 20);
         frame.getContentPane().add(spPassengers);
-
+        
         JButton btnBook = new JButton("Book");
         btnBook.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {     
+            public void actionPerformed(ActionEvent e) {
+            	
+            	int nrOfPassengers = (int)spPassengers.getValue();
+            	
                 frame.getContentPane().removeAll();
                 
-                pay(frame,flight,txtPrice.getText());
+                pay(frame,flight,txtPrice.getText(), nrOfPassengers);
                 frame.getContentPane().revalidate();
                 frame.getContentPane().repaint();
             }
@@ -500,7 +506,7 @@ public class gui {
 
     }
     
-    public void pay(JFrame frame,String[] flight,String price){
+    public void pay(JFrame frame,String[] flight,String price, int nrOfPassengers){
     	contentPane = new JPanel();
     	user_logout(frame);
 		
@@ -535,6 +541,12 @@ public class gui {
         JButton btnPay = new JButton("Pay");
         btnPay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	int id=Integer.parseInt(flight[0]);
+            	System.out.println("ID:" + id);
+            	int cardNr=Integer.parseInt(txtCardNr.getText());
+            	
+            	sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price));
+            	
                 frame.getContentPane().removeAll(); 
                 initialize(frame,true);
                 frame.getContentPane().validate();

@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class SystemController {
-    public static String dbPath = "C:/cygwin64/home/david/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
+    public static String dbPath = "C:/Users/Administratör/workspace/GIT_JAVA/TravelPlaner/pa1415_group.e2_travelplanner.db";
 	
     public String user;
     private FlightController flight;
@@ -61,10 +61,18 @@ public class SystemController {
         boolean result = account.register(firstName, lastName);
     }
     
-    public boolean bookFlight(int id, int nrOfPassangers, int cardNr) {
-        this.flight = new FlightController();
-        
-        return this.flight.bookFlight(id, nrOfPassangers);
+    public boolean bookFlight(int id, int nrOfPassangers, int cardNr, int price) {
+    	boolean success = false;
+    	this.pay = new PaymentController(cardNr, price, this.user);
+    	
+    	if(pay.makePayment()) {
+    		EmailController ec = new EmailController(this.user);
+    		this.flight = new FlightController();
+    		
+    		ec.sendRecipt();
+    		success = this.flight.bookFlight(id, nrOfPassangers);    		
+    	}
+    	return success;
     }
     
     public String[][] getFlights(String origin, String destination, String date) {

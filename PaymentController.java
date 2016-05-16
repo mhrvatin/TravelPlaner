@@ -13,12 +13,6 @@ public class PaymentController{
     private final int cardNr;
     private final int price;
     
-    public PaymentController(){
-        this.bank = new BankMock();
-        this.cardNr = 0;
-        this.price = 0;
-        this.user = "";
-    }
     public PaymentController(int cardNr, int price, String user){
         this.bank = new BankMock();
         this.cardNr = cardNr;
@@ -28,7 +22,7 @@ public class PaymentController{
     public Boolean makePayment() {
         boolean payed=false;
         
-        if(this.cardNr != 0 && !this.user.equals("")) {
+        if(this.cardNr != 0) {
            payed = this.bank.makePayment(this.cardNr, this.price);
         }
         
