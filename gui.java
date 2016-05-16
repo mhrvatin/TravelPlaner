@@ -23,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class gui {
     private JTable table;
@@ -47,9 +49,7 @@ public class gui {
     private JTextField txtPricePerSeat;
     private final SystemController sc = new SystemController();
 
-    /**
-     * Launch the application.
-     */
+    
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -145,6 +145,8 @@ public class gui {
         });
         btnAdminTest.setBounds(10, 10, 111, 23);
         frame.getContentPane().add(btnAdminTest);
+        
+        
     }
     
     public void login_register(JFrame frame){
@@ -329,8 +331,11 @@ public class gui {
         model.addColumn("Origin");
         model.addColumn("Destination");
         model.addColumn("Date");
-
+        
         for(int i = 0; i < 10; i++){
+        	if(flights[i][0] == null){
+        		break;
+        	}
             model.insertRow(i,new Object[] {flights[i][0],flights[i][1],flights[i][2]});
         }
 
@@ -378,6 +383,7 @@ public class gui {
             	String[] flight =  flights[table.getSelectedRow()];
                 frame.getContentPane().removeAll();
                 book(frame,flight);
+                frame.getContentPane().revalidate();
                 frame.getContentPane().repaint();
             }
         });
@@ -393,37 +399,43 @@ public class gui {
         frame.getContentPane().setLayout(null);
         frame.getContentPane().add(contentPane);
 
-        txtOrigin = new JTextField();
+        txtOrigin = new JTextField(flight[1]);
         txtOrigin.setBounds(81, 87, 176, 20);
         frame.getContentPane().add(txtOrigin);
         txtOrigin.setColumns(10);
 
-        JTextField txtDestination = new JTextField();
+        JTextField txtDestination = new JTextField(flight[2]);
         txtDestination.setColumns(10);
         txtDestination.setBounds(81, 144, 176, 20);
         frame.getContentPane().add(txtDestination);
 
-        txtPrice = new JTextField();
+        txtPrice = new JTextField(flight[6]);
         txtPrice.setColumns(10);
         txtPrice.setBounds(81, 261, 58, 20);
         frame.getContentPane().add(txtPrice);
 
-        txtDate = new JTextField();
+        txtDate = new JTextField(flight[3]);
         txtDate.setBounds(399, 87, 86, 20);
         frame.getContentPane().add(txtDate);
         txtDate.setColumns(10);
 
-        txtTime = new JTextField();
+        txtTime = new JTextField(flight[4]);
         txtTime.setColumns(10);
         txtTime.setBounds(559, 87, 86, 20);
         frame.getContentPane().add(txtTime);
 
-        txtDate_2 = new JTextField();
+        txtDate_2 = new JTextField(flight[3]);
         txtDate_2.setColumns(10);
         txtDate_2.setBounds(399, 144, 86, 20);
         frame.getContentPane().add(txtDate_2);
+        
 
-        txtTime_2 = new JTextField();
+        String arrTime = flight[4].substring(0, 2);
+        int time = Integer.parseInt(arrTime) + Integer.parseInt(flight[5].substring(0, 2));
+        System.out.println(time);
+        String arrivalTime = Integer.toString(time) + ":" + flight[4].substring(3, 5);
+        
+        txtTime_2 = new JTextField(arrivalTime);
         txtTime_2.setColumns(10);
         txtTime_2.setBounds(559, 144, 86, 20);
         frame.getContentPane().add(txtTime_2);
@@ -461,8 +473,14 @@ public class gui {
         frame.getContentPane().add(lblTime_2);
 
         JSpinner spPassengers = new JSpinner();
+        spPassengers.setValue(1);
+        spPassengers.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent arg0) {
+        		int price = (Integer)spPassengers.getValue() * Integer.parseInt(flight[6]);
+        		txtPrice.setText(Integer.toString(price));
+        	}
+        });
         spPassengers.setEnabled(true);
-
 
         spPassengers.setBounds(81, 204, 29, 20);
         frame.getContentPane().add(spPassengers);
@@ -471,7 +489,8 @@ public class gui {
         btnBook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {     
                 frame.getContentPane().removeAll();
-                pay(frame);
+                
+                pay(frame,flight,txtPrice.getText());
                 frame.getContentPane().revalidate();
                 frame.getContentPane().repaint();
             }
@@ -481,7 +500,7 @@ public class gui {
 
     }
     
-    public void pay(JFrame frame){
+    public void pay(JFrame frame,String[] flight,String price){
     	contentPane = new JPanel();
     	user_logout(frame);
 		
@@ -492,7 +511,7 @@ public class gui {
         lblPrice.setBounds(77, 126, 46, 14);
         frame.getContentPane().add(lblPrice);
 
-        JLabel lblDisplayPrice = new JLabel("Displaying Price");
+        JLabel lblDisplayPrice = new JLabel(price);
         lblDisplayPrice.setBounds(161, 126, 162, 14);
         frame.getContentPane().add(lblDisplayPrice);
 
@@ -505,12 +524,12 @@ public class gui {
         frame.getContentPane().add(txtCardNr);
         txtCardNr.setColumns(10);
 
-        JLabel lblReceipt = new JLabel("Receipt sent to:");
+        JLabel lblReceipt = new JLabel("Receipt sent to: ");
         lblReceipt.setBounds(77, 222, 150, 14);
         frame.getContentPane().add(lblReceipt);
 
         JLabel lblUserEmail = new JLabel("User Email");
-        lblUserEmail.setBounds(161, 270, 226, 14);
+        lblUserEmail.setBounds(200, 222, 226, 14);
         frame.getContentPane().add(lblUserEmail);
 
         JButton btnPay = new JButton("Pay");
