@@ -5,9 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class SystemController {
-    public static String dbPath = "e:/massa goa grejor/Skola/PA1415/" +
-        "TravelPlanner_netbeans.project/travelplanner/src/TravelPlanner/" +
-        "pa1415_group.e2_travelplanner.db";
+    public static String dbPath = "C:/cygwin64/home/david/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
 	
     public String user;
     private FlightController flight;
@@ -69,14 +67,14 @@ public class SystemController {
         return this.flight.bookFlight(id, nrOfPassangers);
     }
     
-    public ArrayList getFlights(String origin, String destination, String date) {
+    public String[][] getFlights(String origin, String destination, String date) {
         this.flight = new FlightController();
         
         //System.out.println(this.flight.getFlights(origin, destination, date));
         return this.flight.getFlights(origin, destination, date);
     }
     
-    public ArrayList getFlights(int id) {
+    public String[][] getFlights(int id) {
         this.flight = new FlightController();
         
         return this.flight.getFlightsInfo(id);

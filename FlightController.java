@@ -117,10 +117,10 @@ public class FlightController {
         return flight;
     }
 	
-    private ArrayList dbGetFlights(String SQL) {
+    private String[][] dbGetFlights(String SQL) {
         Connection connection = null;
-        ArrayList<ArrayList<String>> flightList = new ArrayList<>();
-        ArrayList<String> flights = new ArrayList<>();        
+        String[][] flights = new String[25][8];
+               
         
         if (!SQL.equals("")) {
             try {
@@ -133,16 +133,14 @@ public class FlightController {
                 int count = 0;
                 
                 while(rs.next()) {
-                    flights.add(Integer.toString(rs.getInt("flight_id")));
-                    flights.add(rs.getString("origin"));
-                    flights.add(rs.getString("destination"));
-                    flights.add(rs.getString("departure_date"));
-                    flights.add(rs.getString("departure_time"));
-                    flights.add(rs.getString("travel_time"));
-                    flights.add(Integer.toString(rs.getInt("price")));
-                    flights.add(Integer.toString(rs.getInt("nr_of_seats")));
-
-                    flightList.add(flights);
+                    flights[count][0] = Integer.toString(rs.getInt("flight_id"));
+                    flights[count][1] = rs.getString("origin");
+                    flights[count][2] = rs.getString("destination");
+                    flights[count][3] = rs.getString("departure_date");
+                    flights[count][4] = rs.getString("departure_time");
+                    flights[count][5] = rs.getString("travel_time");
+                    flights[count][6] = Integer.toString(rs.getInt("price"));
+                    flights[count][7] = Integer.toString(rs.getInt("nr_of_seats"));
                     count++;
                 }
             } catch(SQLException e) {
@@ -160,7 +158,7 @@ public class FlightController {
             }
         }
         
-        return flightList;
+        return flights;
     }
 	
     public boolean bookFlight(int id, int nrOfPassengers) {
@@ -173,8 +171,8 @@ public class FlightController {
         );
     }
 	
-    public ArrayList getFlights(String origin, String destination, String date) {
-        ArrayList flights = this.dbGetFlights(
+    public String[][] getFlights(String origin, String destination, String date) {
+        String[][] flights = this.dbGetFlights(
             "SELECT * FROM flights WHERE origin = '" +
             origin + "' AND destination = '" + destination +
             "' AND departure_date = '" + date + "'" 
@@ -184,15 +182,15 @@ public class FlightController {
     }
 
     // make sure to test!
-    public ArrayList getFlightsInfo(int id){
-        List flights = this.dbGetFlights(
+    public String[][] getFlightsInfo(int id){
+        String[][] flights = this.dbGetFlights(
             "SELECT * FROM flights WHERE flight_id = " + id
         );
         
         //System.out.println(flights[0][1]);
         
         //return flights[0];
-        return new ArrayList<>();
+        return flights;
     }
 
     public boolean addFlight(String origin, String destination,
