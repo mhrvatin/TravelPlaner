@@ -1,28 +1,27 @@
 package travelplanner;
 
-import java.sql.*;
+//import java.sql.*;
 
 public class BankMock {
-    String dbPath = "./travelplanner.db";
-
     BankMock() {
-
     }
 
-    public Boolean makePayment(int cardNr, int price) {
-        Connection connection = null;
-        Boolean payed = false;
+    public boolean makePayment(int cardNr, double price) {
+        /*Connection connection = null;
+        boolean payed = false;
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
-            ResultSet rs = statement.executeQuery("select * from * ");
+            ResultSet rs = statement.executeQuery("select * FROM bank WHERE cardnr=" + cardNr);
 
-            int amount = rs.getInt("user_id");
+            double amount = rs.getLong("amount");
 
             if (amount > price) {
-                amount-=price;
-                statement.executeUpdate("UPDATE value (" + amount + ")");
+                amount -= price;
+                statement.executeUpdate(
+                    "UPDATE bank set amount = " +
+                    amount + "WHERE CardNr = " + cardNr );
                 payed = true;
             }
         } catch (SQLException e) {
@@ -38,6 +37,8 @@ public class BankMock {
                 System.err.println(e);
             }
             return payed;
-        }
+        }*/
+        
+        return true;
     }
 }
