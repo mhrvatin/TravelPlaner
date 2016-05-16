@@ -116,7 +116,11 @@ public class gui {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String formatedDate = format.format(dateString);
                 
-                ArrayList res = sc.getFlights(origin, destination, formatedDate);
+                String[][] flights = sc.getFlights(origin, destination, formatedDate);
+                frame.getContentPane().removeAll();
+            	frame.getContentPane().revalidate();
+            	search(frame,flights);
+            	frame.getContentPane().repaint();
             }
         });
         btnSearch.setBounds(253, 304, 89, 23);
@@ -291,7 +295,7 @@ public class gui {
                 if (passwordField.getText().equals(passwordConfirmField.getText())) {
                     try {
                         sc.register(emailField.getText(), passwordField.getText(),
-                            nameField.getText(), lastNameField.getText());
+                        nameField.getText(), lastNameField.getText());
                         frame.getContentPane().removeAll();
                         initialize(frame, true);
                         frame.getContentPane().validate();
@@ -308,7 +312,7 @@ public class gui {
         frame.getContentPane().add(btnRegister);
     }
     
-    public void search(JFrame frame){
+    public void search(JFrame frame,String[][] flights){
         contentPane = new JPanel();
         frame.getContentPane().setLayout(null);
         frame.getContentPane().add(contentPane);
@@ -327,7 +331,7 @@ public class gui {
         model.addColumn("Date");
 
         for(int i = 0; i < 10; i++){
-            model.insertRow(i,new Object[] {"test","test","test"});
+            model.insertRow(i,new Object[] {flights[i][0],flights[i][1],flights[i][2]});
         }
 
         scrollPane.setViewportView(table);
@@ -361,7 +365,8 @@ public class gui {
                 String destination = txtDestination.getText();
                 String date = dateOrigin.getDateFormatString();
                 System.out.println(date);
-                //sc.getFlights(origin, destination, date);
+                String[][] flights = sc.getFlights(origin, destination, date);
+                System.out.println(flights[0][0]);
             }
         });
         btnSearch.setBounds(527, 48, 89, 23);
@@ -370,62 +375,18 @@ public class gui {
         JButton btnBook = new JButton("Book");
         btnBook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	String[] flight =  flights[table.getSelectedRow()];
                 frame.getContentPane().removeAll();
-                book(frame);
+                book(frame,flight);
                 frame.getContentPane().repaint();
             }
         });
         btnBook.setBounds(280, 424, 89, 23);
         frame.getContentPane().add(btnBook);
-        DefaultTableModel model_search = new DefaultTableModel();
-
-        table = new JTable(model_search);
-
-        model_search.addColumn("Origin");
-        model_search.addColumn("Destination");
-        model_search.addColumn("Date");
-
-        for(int i = 0; i < 10; i++){
-                model_search.insertRow(i,new Object[] {"test","test","test"});
-        }
-
-        scrollPane.setViewportView(table);
-
-        txtOrigin = new JTextField();
-        txtOrigin.setBounds(66, 49, 161, 20);
-        frame.getContentPane().add(txtOrigin);
-        txtOrigin.setColumns(10);
-
-        txtDestination = new JTextField();
-        txtDestination.setColumns(10);
-        txtDestination.setBounds(237, 49, 164, 20);
-        frame.getContentPane().add(txtDestination);
-
-        JDateChooser dateOrigin_search = new JDateChooser();
-        dateOrigin_search.setBounds(411, 49, 95, 20);
-        frame.getContentPane().add(dateOrigin_search);
-
-        JLabel lblOrigin_search = new JLabel("Origin");
-        lblOrigin_search.setBounds(66, 24, 46, 14);
-        frame.getContentPane().add(lblOrigin_search);
-
-        JLabel lblDestination_search = new JLabel("Destination");
-        lblDestination_search.setBounds(237, 24, 100, 14);
-        frame.getContentPane().add(lblDestination_search);
-
-        JButton btnBook_search = new JButton("Book");
-        btnBook_search.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                frame.getContentPane().removeAll();
-                book(frame);
-                frame.getContentPane().repaint();
-            }
-        });
-        btnBook_search.setBounds(280, 424, 89, 23);
-        frame.getContentPane().add(btnBook_search);
+      
     }
     
-    public void book(JFrame frame){
+    public void book(JFrame frame,String[] flight){
     	contentPane = new JPanel();
     	user_logout(frame);
         
