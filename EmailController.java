@@ -57,11 +57,10 @@ public class EmailController {
         }
         
         
-        System.out.println(email);
+        
         
         
         String recipt=this.makeRecipt();
-        
         
         boolean ret=mock.sendEmail(email, recipt);
         
@@ -72,12 +71,14 @@ public class EmailController {
     }
     
     //TASK: Collects the info about the transcation out of data that is collected from the database
-    private int getTranscation(){
+    private String getTranscation(){
         
         //Get current user transaction (? = private varaible user in the class)
         //Select transaction From Transactions where username = ? ORDER BY created desc Limit 1;
         Connection connection = null;
         int transaction=0;
+        int price = 0;
+        String date="";
         
         try {
             
@@ -92,6 +93,8 @@ public class EmailController {
                 //Save data from database in the variable (int transaction)
                 //int transaction = Value from database
                 transaction=rs.getInt("transaction_id");
+                price=rs.getInt("price");
+                date=rs.getString("date");
                 
             }
         } catch(SQLException e) {
@@ -108,13 +111,14 @@ public class EmailController {
             }
         }
         
-        
-        return transaction;
+        String allInfo="Transaction id: "+ transaction +" Price: "+ price + " Date: "+ date;
+        System.out.println(allInfo);
+        return allInfo;
     }
     //TASK: Creates the reciept out of data from the getTranscation function
     private String makeRecipt(){
         
-        int transaction = this.getTranscation();
+        String allInfo = this.getTranscation();
         
         //Get current user info (? = private varaible user in the class)
         // Select * From Users where username = ?
@@ -158,15 +162,13 @@ public class EmailController {
         
         
         String reciept="Recipt from TravelPlanner \n"
-        + "Hello " + name + " " +lastName +"! the transaction id is " + transaction +" on your account "
+        + "Hello " + name + " " +lastName +"! "+ allInfo + " on your account "
         +" with the register email: " + email ;
         
-        
-        
+        System.out.println(reciept);
         return reciept;
         
     }
-    
     public boolean verify(String verifyHash)
     {
         
@@ -177,3 +179,6 @@ public class EmailController {
     }
     
 }
+
+
+
