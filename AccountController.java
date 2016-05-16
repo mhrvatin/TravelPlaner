@@ -42,9 +42,9 @@ public class AccountController {
             		ret = "Admin";
             		fullName = "Admin";
             	}
-            	if(rs.getString("account_active").equals("0")) {            		
-            		ret = "ACTIVATE";	
-            	}
+            	/*if(rs.getString("account_active").equals("0")) {
+            		ret = "ACTIVATE";
+            	}*/
             } else {
                 ret = "";   //password incorrect
             }

@@ -1,18 +1,8 @@
 package travelplanner;
 
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -21,8 +11,6 @@ import java.awt.event.ActionEvent;
 import com.toedter.calendar.JDateChooser;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
@@ -115,12 +103,17 @@ public class gui {
                 Date dateString = dateOrigin.getDate();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String formatedDate = format.format(dateString);
-                
-                String[][] flights = sc.getFlights(origin, destination, formatedDate);
-                frame.getContentPane().removeAll();
-            	frame.getContentPane().revalidate();
-            	search(frame,flights);
-            	frame.getContentPane().repaint();
+                if(origin.equals("") && destination.equals("")) {
+                    JOptionPane.showMessageDialog(frame, "not valid search Params",
+                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                }
+                else{
+                    String[][] flights = sc.getFlights(origin, destination, formatedDate);
+                    frame.getContentPane().removeAll();
+                    frame.getContentPane().revalidate();
+                    search(frame, flights, origin, destination, dateString);
+                    frame.getContentPane().repaint();
+                }
             }
         });
         btnSearch.setBounds(253, 304, 89, 23);
@@ -296,26 +289,43 @@ public class gui {
         btnRegister.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (passwordField.getText().equals(passwordConfirmField.getText())) {
-                    try {
-                        sc.register(emailField.getText(), passwordField.getText(),
-                        nameField.getText(), lastNameField.getText());
-                        frame.getContentPane().removeAll();
-                        initialize(frame, true);
-                        frame.getContentPane().validate();
-                        frame.getContentPane().repaint();
-                    } catch (NoSuchAlgorithmException ex) {
-                        Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+                    String email= emailField.getText();
+                    String pass= passwordField.getText();
+                    String name= nameField.getText();
+                    String lastName= lastNameField.getText();
+                    if(!email.isEmpty() && !pass.isEmpty() && !name.isEmpty() && !lastName.isEmpty()) {
+                        try {
+                            boolean reg =sc.register(email, pass, name, lastName);
+                            if(reg) {
+                                frame.getContentPane().removeAll();
+                                initialize(frame, true);
+                                frame.getContentPane().validate();
+                                frame.getContentPane().repaint();
+                            }else{
+                                JOptionPane.showMessageDialog(frame, "email already exist",
+                                        "Couldn't register", JOptionPane.ERROR_MESSAGE);
+
+                            }
+                        } catch (NoSuchAlgorithmException ex) {
+                            Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(frame, "params are not valid",
+                                "Couldn't register", JOptionPane.ERROR_MESSAGE);
+
                     }
                 } else {
-                    System.out.println("passwords doesn't match");
+                    JOptionPane.showMessageDialog(frame, "passwords doesnt' match",
+                            "Couldn't register", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
         btnRegister.setBounds(208, 334, 89, 23);
         frame.getContentPane().add(btnRegister);
     }
-    
-    public void search(JFrame frame,String[][] flights){
+
+    public void search(JFrame frame,String[][] flights, String origin, String destination ,Date date) {
+
         contentPane = new JPanel();
         frame.getContentPane().setLayout(null);
         frame.getContentPane().add(contentPane);
@@ -332,27 +342,28 @@ public class gui {
         model.addColumn("Origin");
         model.addColumn("Destination");
         model.addColumn("Date");
-        
-        for(int i = 0; i < 10; i++){
-        	if(flights[i][0] == null){
-        		break;
-        	}
-            model.insertRow(i,new Object[] {flights[i][1],flights[i][2],flights[i][3]});
+
+        for (int i = 0; i < 10; i++) {
+            if (flights[i][0] == null) {
+                break;
+            }
+            model.insertRow(i, new Object[]{flights[i][1], flights[i][2], flights[i][3]});
         }
 
         scrollPane.setViewportView(table);
 
-        txtOrigin = new JTextField();
+        txtOrigin = new JTextField(origin);
         txtOrigin.setBounds(66, 49, 161, 20);
         frame.getContentPane().add(txtOrigin);
         txtOrigin.setColumns(10);
 
-        txtDestination = new JTextField();
+        txtDestination = new JTextField(destination);
         txtDestination.setColumns(10);
         txtDestination.setBounds(237, 49, 164, 20);
         frame.getContentPane().add(txtDestination);
 
         JDateChooser dateOrigin = new JDateChooser();
+        dateOrigin.setDate(date);
         dateOrigin.setBounds(411, 49, 95, 20);
         frame.getContentPane().add(dateOrigin);
 
@@ -363,16 +374,22 @@ public class gui {
         JLabel lblDestination = new JLabel("Destination");
         lblDestination.setBounds(237, 24, 100, 14);
         frame.getContentPane().add(lblDestination);
-        
+
         JButton btnSearch = new JButton("Search");
         btnSearch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String origin = txtOrigin.getText();
                 String destination = txtDestination.getText();
-                String date = dateOrigin.getDateFormatString();
-                System.out.println(date);
-                String[][] flights = sc.getFlights(origin, destination, date);
-                System.out.println(flights[0][0]);
+
+                Date dateString = dateOrigin.getDate();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                String formatedDate = format.format(dateString);
+
+                String[][] flights = sc.getFlights(origin, destination, formatedDate);
+                frame.getContentPane().removeAll();
+                frame.getContentPane().revalidate();
+                search(frame, flights, origin, destination, date);
+                frame.getContentPane().repaint();
             }
         });
         btnSearch.setBounds(527, 48, 89, 23);
@@ -382,19 +399,21 @@ public class gui {
         JButton btnBook = new JButton("Book");
         btnBook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	String[] flight =  flights[table.getSelectedRow()];
+                String[] flight = flights[table.getSelectedRow()];
                 frame.getContentPane().removeAll();
-                book(frame,flight);
+                book(frame, flight);
                 frame.getContentPane().revalidate();
                 frame.getContentPane().repaint();
             }
         });
         btnBook.setBounds(280, 424, 89, 23);
         frame.getContentPane().add(btnBook);
-        if(sc.user == null)
-        	btnBook.setVisible(false);
+        if (sc.user == null){
+            btnBook.setVisible(false);
+            login_register(frame);
+    }else {user_logout(frame);}
     }
-    
+
     public void book(JFrame frame,String[] flight){
     	contentPane = new JPanel();
     	user_logout(frame);
@@ -474,8 +493,9 @@ public class gui {
         JLabel lblTime_2 = new JLabel("Time");
         lblTime_2.setBounds(559, 119, 46, 14);
         frame.getContentPane().add(lblTime_2);
-
-        JSpinner spPassengers = new JSpinner();
+        int max = Integer.parseInt(flight[7]);
+        SpinnerNumberModel model1 = new SpinnerNumberModel(1, 1, max, 1);
+        JSpinner spPassengers = new JSpinner(model1);
         spPassengers.setValue(1);
         spPassengers.addChangeListener(new ChangeListener() {
         	public void stateChanged(ChangeEvent arg0) {
@@ -534,7 +554,7 @@ public class gui {
         lblReceipt.setBounds(77, 222, 150, 14);
         frame.getContentPane().add(lblReceipt);
 
-        JLabel lblUserEmail = new JLabel("User Email");
+        JLabel lblUserEmail = new JLabel(sc.user);
         lblUserEmail.setBounds(200, 222, 226, 14);
         frame.getContentPane().add(lblUserEmail);
 

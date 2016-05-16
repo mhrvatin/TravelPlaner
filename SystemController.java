@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class SystemController {
-    public static String dbPath = "C:/Users/Administratör/workspace/GIT_JAVA/TravelPlaner/pa1415_group.e2_travelplanner.db";
+    public static String dbPath = "/home/freak/Code/project/src/travelplanner/pa1415_group.e2_travelplanner.db";
 	
     public String user;
     private FlightController flight;
@@ -32,7 +32,7 @@ public class SystemController {
         
         this.account = new AccountController(username, hashedPassword);
         this.user = account.login();
-        
+
         boolean ret = true;
         
         if (this.user.equals("")) {
@@ -42,9 +42,9 @@ public class SystemController {
         return ret;
     }
     
-    public void register(String username, String password, String firstName, String lastName) throws NoSuchAlgorithmException {
+    public boolean register(String username, String password, String firstName, String lastName) throws NoSuchAlgorithmException {
         byte[] bytes;
-
+        boolean ret = false;
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(password.getBytes());
         bytes = md.digest();
@@ -57,8 +57,17 @@ public class SystemController {
         String hashedPassword = sb.toString();
         
         this.account = new AccountController(username, hashedPassword);
-        
+
         boolean result = account.register(firstName, lastName);
+
+        if(result){
+            ret=true;
+            user=username;
+        }
+        else{
+            user=null;
+        }
+        return ret;
     }
     
     public boolean bookFlight(int id, int nrOfPassangers, int cardNr, int price) {
