@@ -28,7 +28,7 @@ public class PaymentController{
     public Boolean makePayment() {
         boolean payed=false;
         
-        if(this.cardNr != 0 && this.user.equals("")) {
+        if(this.cardNr != 0 && !this.user.equals("")) {
            payed = this.bank.makePayment(this.cardNr, this.price);
         }
         
@@ -47,10 +47,10 @@ public class PaymentController{
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             statement.executeUpdate(
-                "INSERT INTO transcations (email, price, date  VALUES (" +
-                this.user + ", " +
-                this.price + ", " +
-                Calendar.getInstance().getTime() + ")"
+                "INSERT INTO transactions VALUES (" + null + ", " +
+                        "'" + this.user + "', " +
+                        "'" + this.price + "', " +
+                        "'" + Calendar.getInstance().getTime() + "' )"
             );
             
         } catch(SQLException e) {
