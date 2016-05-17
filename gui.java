@@ -134,6 +134,7 @@ public class gui {
             	
             	frame.getContentPane().removeAll();
             	frame.getContentPane().revalidate();
+            	adminMain(frame);
             	frame.getContentPane().repaint();
             }
         });
@@ -170,7 +171,7 @@ public class gui {
     }
     
     public void user_logout(JFrame frame){
-        JLabel lblUser = new JLabel("Welcome " + sc.user);
+        JLabel lblUser = new JLabel("Welcome " + sc.userName);
         lblUser.setBounds(345, 11, 150, 21);
         frame.getContentPane().add(lblUser);
 
@@ -298,7 +299,7 @@ public class gui {
                             boolean reg =sc.register(email, pass, name, lastName);
                             if(reg) {
                                 frame.getContentPane().removeAll();
-                                initialize(frame, true);
+                                initialize(frame, false);
                                 frame.getContentPane().validate();
                                 frame.getContentPane().repaint();
                             }else{
@@ -412,6 +413,7 @@ public class gui {
             btnBook.setVisible(false);
             login_register(frame);
     }else {user_logout(frame);}
+        
     }
 
     public void book(JFrame frame,String[] flight){
@@ -493,7 +495,7 @@ public class gui {
         JLabel lblTime_2 = new JLabel("Time");
         lblTime_2.setBounds(559, 119, 46, 14);
         frame.getContentPane().add(lblTime_2);
-        int max = Integer.parseInt(flight[7]);
+        int max = 6;
         SpinnerNumberModel model1 = new SpinnerNumberModel(1, 1, max, 1);
         JSpinner spPassengers = new JSpinner(model1);
         spPassengers.setValue(1);

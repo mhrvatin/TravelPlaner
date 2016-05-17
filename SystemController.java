@@ -5,9 +5,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class SystemController {
-    public static String dbPath = "/home/freak/Code/project/src/travelplanner/pa1415_group.e2_travelplanner.db";
+    public static String dbPath = "C:/Users/Administratör/workspace/GIT_JAVA/TravelPlaner/pa1415_group.e2_travelplanner.db";
 	
     public String user;
+    public String userName;
     private FlightController flight;
     //private EmailMock email;
     private AccountController account;
@@ -18,6 +19,7 @@ public class SystemController {
     
     public boolean login(String username, String password) throws NoSuchAlgorithmException {
         byte[] bytes;
+        String[] loginReturn = new String[2];
 
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(password.getBytes());
@@ -31,12 +33,20 @@ public class SystemController {
         String hashedPassword = sb.toString();
         
         this.account = new AccountController(username, hashedPassword);
-        this.user = account.login();
+        loginReturn = account.login();
+        this.user = loginReturn[0];
+        this.userName = loginReturn[1];
 
+        	System.out.println("User" + this.user + "UserName" + this.userName);
+        
         boolean ret = true;
         
         if (this.user.equals("")) {
             ret = false;
+        } else if(this.user.equals("ACTIVATE")){
+        	this.user = null;
+        	this.userName = null;
+        	ret = false;
         }
         
         return ret;
@@ -62,7 +72,6 @@ public class SystemController {
 
         if(result){
             ret=true;
-            user=username;
         }
         else{
             user=null;

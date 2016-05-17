@@ -16,8 +16,10 @@ public class AccountController {
         this.password = password;
     }
 
-    public String login() {
-        String ret = "";
+    public String[] login() {
+        String[] ret = new String[2];
+        ret[0] = "";
+        ret[1] = "";
 
         Connection connection = null;
 
@@ -34,25 +36,25 @@ public class AccountController {
             String pwdHash = rs.getString("user_password_hash");
             //LOGIN
             if(pwdHash.equals(password)) {
-            	ret = this.user;
-        		String fullName = (rs.getString("first_name") + " "
+            	ret[0] = this.user;
+        		ret[1] = (rs.getString("first_name") + " "
         				+ rs.getString("last_name"));
         		
             	if(rs.getString("admin").equals("1")) {
-            		ret = "Admin";
-            		fullName = "Admin";
+            		ret[0] = "ADMIN";
+            		ret[1] = "Admin";
             	}
-            	/*if(rs.getString("account_active").equals("0")) {
-            		ret = "ACTIVATE";
-            	}*/
+            	if(rs.getString("account_active").equals("0")) {
+            		ret[0] = "ACTIVATE";
+            	}
             } else {
-                ret = "";   //password incorrect
+                ret[0] = "";   //password incorrect
             }
         } catch(SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
             System.err.println(e.getMessage());
-            ret = "";
+            ret[0] = "";
             return ret; // return if user isn't found
         } finally {
             try {
@@ -95,11 +97,22 @@ public class AccountController {
                     "'" + user + "', " +
                     "'" + password + "', " +
                     "'" + activationHash + "', " +
-                    "'" + 0 + "', " +
+                    "'" + 1 + "', " +
                     "'" + 0 + "', " +
                     "'" + firstName + "', " +
                     "'" + lastName + "' )"); 
 
+                /*// The code above is for demoing, the acount is instantly activated. Code below is original
+                statement.executeUpdate("INSERT INTO users VALUES(" + null + ", " +
+                    "'" + user + "', " +
+                    "'" + password + "', " +
+                    "'" + activationHash + "', " +
+                    "'" + 0 + "', " +
+                    "'" + 0 + "', " +
+                    "'" + firstName + "', " +
+                    "'" + lastName + "' )");                
+                 */
+                
                 ret = true;
             }
         } catch(SQLException e) {
