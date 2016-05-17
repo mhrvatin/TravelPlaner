@@ -13,10 +13,6 @@ FlightController:*
 * changed return type of getFlights() from String[][] to List
 * changed return type of getFlightsInfo() from String[] to List
 
-AccountController
-- Remove getUser() function
-     Resoning: Redundant as the user is saved in SC during the entire session.
-
 —————Updated class diagram 13/05-2016—————————————
 
 EmailController:
@@ -26,4 +22,10 @@ SystemController
 * listeners is not a inner class anymore
 
 *bookflight function added parameter price
+- Added new membervariable userName, stores the name of the user
+
+AccountController
+- Remove getUser() function
+     Resoning: Redundant as the user is saved in SC during the entire session.
+*changed return type of login() from String to String[]
 
