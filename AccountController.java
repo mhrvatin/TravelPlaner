@@ -97,11 +97,22 @@ public class AccountController {
                     "'" + user + "', " +
                     "'" + password + "', " +
                     "'" + activationHash + "', " +
-                    "'" + 0 + "', " +
+                    "'" + 1 + "', " +
                     "'" + 0 + "', " +
                     "'" + firstName + "', " +
                     "'" + lastName + "' )"); 
 
+                /*// The code above is for demoing, the acount is instantly activated. Code below is original
+                statement.executeUpdate("INSERT INTO users VALUES(" + null + ", " +
+                    "'" + user + "', " +
+                    "'" + password + "', " +
+                    "'" + activationHash + "', " +
+                    "'" + 0 + "', " +
+                    "'" + 0 + "', " +
+                    "'" + firstName + "', " +
+                    "'" + lastName + "' )");                
+                 */
+                
                 ret = true;
             }
         } catch(SQLException e) {
