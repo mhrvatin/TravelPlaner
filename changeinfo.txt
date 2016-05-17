@@ -12,6 +12,7 @@ FlightController:*
 * changed return type of dbGetFlights() from String[][] to List
 * changed return type of getFlights() from String[][] to List
 * changed return type of getFlightsInfo() from String[] to List
+* added function to remove fullbooked flight 
 
 AccountController
 - Remove getUser() function

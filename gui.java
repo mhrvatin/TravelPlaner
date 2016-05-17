@@ -525,6 +525,30 @@ public class gui {
         frame.getContentPane().add(btnBook);
 
     }
+
+     public static boolean luhn(String ccNumber)
+        {
+            //for checking credit_card validty by luhn algrotihm
+            int sum = 0;
+            boolean alternate = false;
+            for (int i = ccNumber.length() - 1; i >= 0; i--)
+            {
+                int n = Integer.parseInt(ccNumber.substring(i, i + 1));
+                if (alternate)
+                {
+                    n *= 2;
+                    if (n > 9)
+                    {
+                        n = (n % 10) + 1;
+                    }
+                }
+                sum += n;
+                alternate = !alternate;
+            }
+            return (sum % 10 == 0);
+        }
+
+
     
     public void pay(JFrame frame,String[] flight,String price, int nrOfPassengers){
     	contentPane = new JPanel();
@@ -558,19 +582,30 @@ public class gui {
         lblUserEmail.setBounds(200, 222, 226, 14);
         frame.getContentPane().add(lblUserEmail);
 
+
         JButton btnPay = new JButton("Pay");
         btnPay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	int id=Integer.parseInt(flight[0]);
             	System.out.println("ID:" + id);
-            	int cardNr=Integer.parseInt(txtCardNr.getText());
-            	
-            	sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price));
-            	
-                frame.getContentPane().removeAll(); 
-                initialize(frame,true);
-                frame.getContentPane().validate();
-                frame.getContentPane().repaint();
+                String cardNr=txtCardNr.getText();
+                if(!cardNr.isEmpty()) {
+                    boolean valid = luhn(cardNr);
+                    if (valid) {
+                        sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price));
+                        frame.getContentPane().removeAll();
+                        initialize(frame,true);
+                        frame.getContentPane().validate();
+                        frame.getContentPane().repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "your credit card number is not valid",
+                                "Couldn't pay", JOptionPane.ERROR_MESSAGE);
+
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(frame, "you haven't filled your cardNr",
+                            "Couldn't pay", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         btnPay.setBounds(77, 328, 89, 23);

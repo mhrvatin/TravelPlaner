@@ -6,7 +6,7 @@ public class BankMock {
     BankMock() {
     }
 
-    public boolean makePayment(int cardNr, double price) {
+    public boolean makePayment(String cardNr, double price) {
         /*Connection connection = null;
         boolean payed = false;
         try {
