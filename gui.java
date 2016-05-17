@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
@@ -103,16 +105,16 @@ public class gui {
                 Date dateString = dateOrigin.getDate();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String formatedDate = format.format(dateString);
-                if(origin.equals("") && destination.equals("")) {
-                    JOptionPane.showMessageDialog(frame, "not valid search Params",
-                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
-                }
-                else{
+                Date todaysDate = new Date();
+                if(todaysDate.before(dateString)) {
                     String[][] flights = sc.getFlights(origin, destination, formatedDate);
                     frame.getContentPane().removeAll();
                     frame.getContentPane().revalidate();
                     search(frame, flights, origin, destination, dateString);
                     frame.getContentPane().repaint();
+                }else{
+                    JOptionPane.showMessageDialog(frame, "this date is in the past",
+                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -383,14 +385,19 @@ public class gui {
                 String destination = txtDestination.getText();
 
                 Date dateString = dateOrigin.getDate();
+                Date todaysDate = new Date();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String formatedDate = format.format(dateString);
-
-                String[][] flights = sc.getFlights(origin, destination, formatedDate);
-                frame.getContentPane().removeAll();
-                frame.getContentPane().revalidate();
-                search(frame, flights, origin, destination, date);
-                frame.getContentPane().repaint();
+                if(todaysDate.before(dateString)) {
+                    String[][] flights = sc.getFlights(origin, destination, formatedDate);
+                    frame.getContentPane().removeAll();
+                    frame.getContentPane().revalidate();
+                    search(frame, flights, origin, destination, date);
+                    frame.getContentPane().repaint();
+                }else{
+                    JOptionPane.showMessageDialog(frame, "this date is in the past",
+                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         btnSearch.setBounds(527, 48, 89, 23);
@@ -528,8 +535,7 @@ public class gui {
 
     }
 
-     public static boolean luhn(String ccNumber)
-        {
+    public static boolean luhn(String ccNumber) {
             //for checking credit_card validty by luhn algrotihm
             int sum = 0;
             boolean alternate = false;
@@ -550,8 +556,6 @@ public class gui {
             return (sum % 10 == 0);
         }
 
-
-    
     public void pay(JFrame frame,String[] flight,String price, int nrOfPassengers){
     	contentPane = new JPanel();
     	user_logout(frame);
