@@ -129,7 +129,7 @@ public class gui {
         frame.getContentPane().add(btnSearch);
 
         JCheckBox chckbxReturnFlight = new JCheckBox("Return Flight");
-        chckbxReturnFlight.setBounds(376, 304, 97, 23);
+        chckbxReturnFlight.setBounds(376, 200, 100, 23);
         frame.getContentPane().add(chckbxReturnFlight);
 
         JDateChooser dateReturn = new JDateChooser();
@@ -147,8 +147,10 @@ public class gui {
             	frame.getContentPane().repaint();
             }
         });
-        btnAdminTest.setBounds(10, 10, 111, 23);
+        btnAdminTest.setBounds(0, 0, 83, 23);
         frame.getContentPane().add(btnAdminTest);
+        
+        
         
         
     }
@@ -243,6 +245,18 @@ public class gui {
         });
         btnLogin.setBounds(182, 250, 89, 23);
         frame.getContentPane().add(btnLogin);
+        
+        JButton btnHome = new JButton("Home");
+        btnHome.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		frame.getContentPane().removeAll();
+        		initialize(frame,false);
+             	frame.getContentPane().revalidate();
+             	frame.getContentPane().repaint();
+        	}
+        });
+        btnHome.setBounds(0, 2, 70, 23);
+        frame.getContentPane().add(btnHome);
     }
     
     public void register(JFrame frame){
@@ -332,6 +346,18 @@ public class gui {
         });
         btnRegister.setBounds(208, 334, 89, 23);
         frame.getContentPane().add(btnRegister);
+        
+        JButton btnHome = new JButton("Home");
+        btnHome.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		frame.getContentPane().removeAll();
+        		initialize(frame,false);
+             	frame.getContentPane().revalidate();
+             	frame.getContentPane().repaint();
+        	}
+        });
+        btnHome.setBounds(0, 2, 70, 23);
+        frame.getContentPane().add(btnHome);
     }
 
     public void search(JFrame frame,String[][] flights, String origin, String destination ,Date date) {
@@ -352,13 +378,7 @@ public class gui {
         model.addColumn("Origin");
         model.addColumn("Destination");
         model.addColumn("Date");
-
-        for (int i = 0; i < 10; i++) {
-            if (flights[i][0] == null) {
-                break;
-            }
-            model.insertRow(i, new Object[]{flights[i][1], flights[i][2], flights[i][3]});
-        }
+        
 
         scrollPane.setViewportView(table);
 
@@ -432,12 +452,41 @@ public class gui {
         });
         btnBook.setBounds(280, 424, 89, 23);
         frame.getContentPane().add(btnBook);
+        
+        JButton btnHome = new JButton("Home");
+        btnHome.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		frame.getContentPane().removeAll();
+        		initialize(frame,false);
+             	frame.getContentPane().revalidate();
+             	frame.getContentPane().repaint();
+        	}
+        });
+        btnHome.setBounds(0, 2, 70, 23);
+        frame.getContentPane().add(btnHome);
+        
         if (sc.user == null){
             btnBook.setVisible(false);
             login_register(frame);
-    }else {user_logout(frame);}
+        }else {
+        	user_logout(frame);
+        }
         
+        if(flights[0][0] != null){
+        	for (int i = 0; i <= 10; i++) {
+                if (flights[i][0] != null) {
+                	model.insertRow(i, new Object[]{flights[i][1], flights[i][2], flights[i][3]});
+                }else{
+                	i = 10;
+                }
+            }
+        }else{
+        	JOptionPane.showMessageDialog(frame, "No matches",
+                    "No matches for your search", JOptionPane.ERROR_MESSAGE);
+        }
     }
+    
+    
 
     public void book(JFrame frame,String[] flight){
     	contentPane = new JPanel();
@@ -541,6 +590,18 @@ public class gui {
          });
         btnBook.setBounds(278, 362, 89, 23);
         frame.getContentPane().add(btnBook);
+        
+        JButton btnHome = new JButton("Home");
+        btnHome.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		frame.getContentPane().removeAll();
+        		initialize(frame,false);
+             	frame.getContentPane().revalidate();
+             	frame.getContentPane().repaint();
+        	}
+        });
+        btnHome.setBounds(0, 2, 70, 23);
+        frame.getContentPane().add(btnHome);
 
     }
 
@@ -623,6 +684,18 @@ public class gui {
         });
         btnPay.setBounds(77, 328, 89, 23);
         frame.getContentPane().add(btnPay);
+        
+        JButton btnHome = new JButton("Home");
+        btnHome.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		frame.getContentPane().removeAll();
+        		initialize(frame,false);
+             	frame.getContentPane().revalidate();
+             	frame.getContentPane().repaint();
+        	}
+        });
+        btnHome.setBounds(0, 2, 70, 23);
+        frame.getContentPane().add(btnHome);
     }
     
     public void adminMain(JFrame frame){
