@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class AccountController {
@@ -79,7 +80,7 @@ public class AccountController {
         boolean ret = false;
         String user = this.user;
         String password = this.password;
-        String activationHash = "";
+        String activationHash = this.makeActivationHash();
 
         Connection connection = null;
 
@@ -130,5 +131,11 @@ public class AccountController {
         }
 
         return ret;
+    }
+    private String makeActivationHash(){
+    	
+    	int ret = ThreadLocalRandom.current().nextInt(10000000, 49999999);
+    	return Integer.toString(ret);
+    	
     }
 }

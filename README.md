@@ -28,7 +28,7 @@ The movtivation for this project being made is because of our course pa1415.
 We have two use cases one as a costumer and one as admin:
 
  
-1.  After starting the program press upper right at "Register" fill in the credentials name, last name, email, password then confirm your password. After this a mail will be sent to you, to confirm your registration hit the link that was sent to you(this is in theory now it's just a mock up). 
+1.  After starting the program press upper right at "Register" fill in the credentials name, last name, email, password then confirm your password. Your account will be auto activated, because to activat your account by email is out of our system . 
 
 2.  You are now registerd, to login press upper right "Login" enter credentials press the login button in the middle of the screen. 
 

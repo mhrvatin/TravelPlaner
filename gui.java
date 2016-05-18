@@ -425,33 +425,27 @@ public class gui {
         frame.getContentPane().setLayout(null);
         frame.getContentPane().add(contentPane);
 
-        txtOrigin = new JLabel(flight[1]);
+        JLabel txtOrigin = new JLabel(flight[1]);
         txtOrigin.setBounds(81, 87, 176, 20);
         frame.getContentPane().add(txtOrigin);
-        txtOrigin.setColumns(10);
 
         JLabel txtDestination = new JLabel(flight[2]);
-        txtDestination.setColumns(10);
         txtDestination.setBounds(81, 144, 176, 20);
         frame.getContentPane().add(txtDestination);
 
-        txtPrice = new JLabel(flight[6]);
-        txtPrice.setColumns(10);
+        JLabel txtPrice = new JLabel(flight[6]);
         txtPrice.setBounds(81, 261, 58, 20);
         frame.getContentPane().add(txtPrice);
 
-        txtDate = new JLabel(flight[3]);
+        JLabel txtDate = new JLabel(flight[3]);
         txtDate.setBounds(399, 87, 86, 20);
         frame.getContentPane().add(txtDate);
-        txtDate.setColumns(10);
 
-        txtTime = new JLabel(flight[4]);
-        txtTime.setColumns(10);
+        JLabel txtTime = new JLabel(flight[4]);
         txtTime.setBounds(559, 87, 86, 20);
         frame.getContentPane().add(txtTime);
 
-        txtDate_2 = new JLabel(flight[3]);
-        txtDate_2.setColumns(10);
+        JLabel txtDate_2 = new JLabel(flight[3]);
         txtDate_2.setBounds(399, 144, 86, 20);
         frame.getContentPane().add(txtDate_2);
         
@@ -461,8 +455,7 @@ public class gui {
         System.out.println(time);
         String arrivalTime = Integer.toString(time) + ":" + flight[4].substring(3, 5);
         
-        txtTime_2 = new JLabel(arrivalTime);
-        txtTime_2.setColumns(10);
+        JLabel txtTime_2 = new JLabel(arrivalTime);
         txtTime_2.setBounds(559, 144, 86, 20);
         frame.getContentPane().add(txtTime_2);
 

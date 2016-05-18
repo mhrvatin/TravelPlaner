@@ -15,14 +15,16 @@ public class EmailController {
     //private String dbPath = "/pa1415_group.e2_travelplanner.db";
    
     public EmailController(String user){
-        this.user=user;
+        //this.user contains the email
+    	this.user=user;
         mock = new EmailMock();
        
     }
    
     //TASK: Sends the reciept to the email adress of the current logged in user after a successful booking
     public boolean sendRecipt(){
-       
+    	
+    	/*
         //Get current users email ( ? = private varaible user in the class)
         //Select email From Users where username = ?
         Connection connection = null;
@@ -56,11 +58,9 @@ public class EmailController {
                 System.err.println(e);
             }
         }
+        */
 
-       
-        String recipt=this.makeRecipt();
-
-        boolean ret=mock.sendEmail(email, recipt);
+        boolean ret=mock.sendEmail(this.user, this.makeRecipt());
        
         return true;
        
@@ -167,10 +167,38 @@ public class EmailController {
         return reciept;
        
     }
-    public boolean verify(String verifyHash)
+    public boolean sendActivate()
     {
        
-        String message = "Use this hash to verufy your account: " + verifyHash;
+    	Connection connection = null;
+        String activateHash = null;
+       
+        try {
+           
+            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);  // set timeout to 30 sec.
+           
+            ResultSet rs = statement.executeQuery("SELECT activation_hash FROM users WHERE email = '" + this.user +"'");
+
+                // read the result set
+                activateHash=rs.getString("activation_hash");
+                
+        } catch(SQLException e) {
+            // if the error message is "out of memory",
+            // it probably means no database file is found
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if(connection != null)
+                    connection.close();
+            } catch(SQLException e) {
+                // connection close failed.
+                System.err.println(e);
+            }
+        }
+    	
+        String message = "Use this hash to verify your account: " + activateHash;
        
         return mock.sendEmail(this.user, message);
        
