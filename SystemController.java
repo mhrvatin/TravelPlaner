@@ -71,6 +71,10 @@ public class SystemController {
         boolean result = account.register(firstName, lastName);
 
         if(result){
+        	//Send activation email
+        	EmailController ec = new EmailController(userName);
+        	ec.sendActivate();
+        	
             ret=true;
         }
         else{
