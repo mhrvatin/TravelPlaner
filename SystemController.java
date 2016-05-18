@@ -5,7 +5,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class SystemController {
-    public static String dbPath = "/Users/ericnilsson/Desktop/TravelPlanner/pa1415_group.e2_travelplanner.db";
+
+    public static String dbPath = "/home/macke/documents/skola/TravelPlanner/pa1415_group.e2_travelplanner.db";
+
 	
     public String user;
     public String userName;
@@ -71,6 +73,10 @@ public class SystemController {
         boolean result = account.register(firstName, lastName);
 
         if(result){
+        	//Send activation email
+        	EmailController ec = new EmailController(userName);
+        	ec.sendActivate();
+        	
             ret=true;
         }
         else{
