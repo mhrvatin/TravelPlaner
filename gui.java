@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
@@ -103,16 +105,16 @@ public class gui {
                 Date dateString = dateOrigin.getDate();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String formatedDate = format.format(dateString);
-                if(origin.equals("") && destination.equals("")) {
-                    JOptionPane.showMessageDialog(frame, "not valid search Params",
-                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
-                }
-                else{
+                Date todaysDate = new Date();
+                if(todaysDate.before(dateString)) {
                     String[][] flights = sc.getFlights(origin, destination, formatedDate);
                     frame.getContentPane().removeAll();
                     frame.getContentPane().revalidate();
                     search(frame, flights, origin, destination, dateString);
                     frame.getContentPane().repaint();
+                }else{
+                    JOptionPane.showMessageDialog(frame, "this date is in the past",
+                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -383,14 +385,19 @@ public class gui {
                 String destination = txtDestination.getText();
 
                 Date dateString = dateOrigin.getDate();
+                Date todaysDate = new Date();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String formatedDate = format.format(dateString);
-
-                String[][] flights = sc.getFlights(origin, destination, formatedDate);
-                frame.getContentPane().removeAll();
-                frame.getContentPane().revalidate();
-                search(frame, flights, origin, destination, date);
-                frame.getContentPane().repaint();
+                if(todaysDate.before(dateString)) {
+                    String[][] flights = sc.getFlights(origin, destination, formatedDate);
+                    frame.getContentPane().removeAll();
+                    frame.getContentPane().revalidate();
+                    search(frame, flights, origin, destination, date);
+                    frame.getContentPane().repaint();
+                }else{
+                    JOptionPane.showMessageDialog(frame, "this date is in the past",
+                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         btnSearch.setBounds(527, 48, 89, 23);
@@ -527,7 +534,28 @@ public class gui {
         frame.getContentPane().add(btnBook);
 
     }
-    
+
+    public static boolean luhn(String ccNumber) {
+            //for checking credit_card validty by luhn algrotihm
+            int sum = 0;
+            boolean alternate = false;
+            for (int i = ccNumber.length() - 1; i >= 0; i--)
+            {
+                int n = Integer.parseInt(ccNumber.substring(i, i + 1));
+                if (alternate)
+                {
+                    n *= 2;
+                    if (n > 9)
+                    {
+                        n = (n % 10) + 1;
+                    }
+                }
+                sum += n;
+                alternate = !alternate;
+            }
+            return (sum % 10 == 0);
+        }
+
     public void pay(JFrame frame,String[] flight,String price, int nrOfPassengers){
     	contentPane = new JPanel();
     	user_logout(frame);
@@ -560,19 +588,30 @@ public class gui {
         lblUserEmail.setBounds(200, 222, 226, 14);
         frame.getContentPane().add(lblUserEmail);
 
+
         JButton btnPay = new JButton("Pay");
         btnPay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	int id=Integer.parseInt(flight[0]);
             	System.out.println("ID:" + id);
-            	int cardNr=Integer.parseInt(txtCardNr.getText());
-            	
-            	sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price));
-            	
-                frame.getContentPane().removeAll(); 
-                initialize(frame,true);
-                frame.getContentPane().validate();
-                frame.getContentPane().repaint();
+                String cardNr=txtCardNr.getText();
+                if(!cardNr.isEmpty()) {
+                    boolean valid = luhn(cardNr);
+                    if (valid) {
+                        sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price));
+                        frame.getContentPane().removeAll();
+                        initialize(frame,true);
+                        frame.getContentPane().validate();
+                        frame.getContentPane().repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "your credit card number is not valid",
+                                "Couldn't pay", JOptionPane.ERROR_MESSAGE);
+
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(frame, "you haven't filled your cardNr",
+                            "Couldn't pay", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         btnPay.setBounds(77, 328, 89, 23);

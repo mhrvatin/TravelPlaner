@@ -79,7 +79,7 @@ public class SystemController {
         return ret;
     }
     
-    public boolean bookFlight(int id, int nrOfPassangers, int cardNr, int price) {
+    public boolean bookFlight(int id, int nrOfPassangers, String cardNr, int price) {
     	boolean success = false;
     	this.pay = new PaymentController(cardNr, price, this.user);
     	
@@ -95,6 +95,7 @@ public class SystemController {
     
     public String[][] getFlights(String origin, String destination, String date) {
         this.flight = new FlightController();
+        flight.removeFullBookedFlight();
         
         //System.out.println(this.flight.getFlights(origin, destination, date));
         return this.flight.getFlights(origin, destination, date);
@@ -102,7 +103,8 @@ public class SystemController {
     
     public String[][] getFlights(int id) {
         this.flight = new FlightController();
-        
+        flight.removeFullBookedFlight();
+
         return this.flight.getFlightsInfo(id);
     }
     

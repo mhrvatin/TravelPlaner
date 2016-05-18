@@ -10,10 +10,10 @@ import java.util.Calendar;
 public class PaymentController{
     private final BankMock bank;
     private final String user;
-    private final int cardNr;
+    private final String cardNr;
     private final int price;
     
-    public PaymentController(int cardNr, int price, String user){
+    public PaymentController(String cardNr, int price, String user){
         this.bank = new BankMock();
         this.cardNr = cardNr;
         this.price = price;
@@ -22,7 +22,7 @@ public class PaymentController{
     public Boolean makePayment() {
         boolean payed=false;
         
-        if(this.cardNr != 0) {
+        if(!this.cardNr.equals("0")) {
            payed = this.bank.makePayment(this.cardNr, this.price);
         }
         
