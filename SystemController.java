@@ -38,8 +38,6 @@ public class SystemController {
         loginReturn = account.login();
         this.user = loginReturn[0];
         this.userName = loginReturn[1];
-
-        	System.out.println("User" + this.user + "UserName" + this.userName);
         
         boolean ret = true;
         
