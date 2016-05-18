@@ -1,4 +1,4 @@
-﻿SystemController:
+SystemController:
 * changed return type of getFlights() from String[][] to List
 * changed return type of getFlights() from String[] to List
 
@@ -29,4 +29,3 @@ AccountController
 - Remove getUser() function
      Resoning: Redundant as the user is saved in SC during the entire session.
 *changed return type of login() from String to String[]
-

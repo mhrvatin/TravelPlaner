@@ -19,7 +19,7 @@ import javax.swing.event.ChangeEvent;
 public class gui {
     private JTable table;
     private JPanel contentPane;
-    private final JFrame frame;
+    private JFrame frame;
     private JTextField txtCardNr;
     private JTextField txtOrigin;
     private JTextField txtDestination;
@@ -105,17 +105,12 @@ public class gui {
                 Date dateString = dateOrigin.getDate();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String formatedDate = format.format(dateString);
-                Date todaysDate = new Date();
-                if(todaysDate.before(dateString)) {
-                    String[][] flights = sc.getFlights(origin, destination, formatedDate);
-                    frame.getContentPane().removeAll();
-                    frame.getContentPane().revalidate();
-                    search(frame, flights, origin, destination, dateString);
-                    frame.getContentPane().repaint();
-                }else{
-                    JOptionPane.showMessageDialog(frame, "this date is in the past",
-                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
-                }
+
+                String[][] flights = sc.getFlights(origin, destination, formatedDate);
+                frame.getContentPane().removeAll();
+                frame.getContentPane().revalidate();
+                search(frame, flights, origin, destination, dateString);
+                frame.getContentPane().repaint();
             }
         });
         btnSearch.setBounds(253, 304, 89, 23);
@@ -430,32 +425,32 @@ public class gui {
         frame.getContentPane().setLayout(null);
         frame.getContentPane().add(contentPane);
 
-        txtOrigin = new JTextField(flight[1]);
+        txtOrigin = new JLabel(flight[1]);
         txtOrigin.setBounds(81, 87, 176, 20);
         frame.getContentPane().add(txtOrigin);
         txtOrigin.setColumns(10);
 
-        JTextField txtDestination = new JTextField(flight[2]);
+        JLabel txtDestination = new JLabel(flight[2]);
         txtDestination.setColumns(10);
         txtDestination.setBounds(81, 144, 176, 20);
         frame.getContentPane().add(txtDestination);
 
-        txtPrice = new JTextField(flight[6]);
+        txtPrice = new JLabel(flight[6]);
         txtPrice.setColumns(10);
         txtPrice.setBounds(81, 261, 58, 20);
         frame.getContentPane().add(txtPrice);
 
-        txtDate = new JTextField(flight[3]);
+        txtDate = new JLabel(flight[3]);
         txtDate.setBounds(399, 87, 86, 20);
         frame.getContentPane().add(txtDate);
         txtDate.setColumns(10);
 
-        txtTime = new JTextField(flight[4]);
+        txtTime = new JLabel(flight[4]);
         txtTime.setColumns(10);
         txtTime.setBounds(559, 87, 86, 20);
         frame.getContentPane().add(txtTime);
 
-        txtDate_2 = new JTextField(flight[3]);
+        txtDate_2 = new JLabel(flight[3]);
         txtDate_2.setColumns(10);
         txtDate_2.setBounds(399, 144, 86, 20);
         frame.getContentPane().add(txtDate_2);
@@ -466,7 +461,7 @@ public class gui {
         System.out.println(time);
         String arrivalTime = Integer.toString(time) + ":" + flight[4].substring(3, 5);
         
-        txtTime_2 = new JTextField(arrivalTime);
+        txtTime_2 = new JLabel(arrivalTime);
         txtTime_2.setColumns(10);
         txtTime_2.setBounds(559, 144, 86, 20);
         frame.getContentPane().add(txtTime_2);
@@ -535,26 +530,26 @@ public class gui {
 
     }
 
-    public static boolean luhn(String ccNumber) {
-            //for checking credit_card validty by luhn algrotihm
-            int sum = 0;
-            boolean alternate = false;
-            for (int i = ccNumber.length() - 1; i >= 0; i--)
-            {
-                int n = Integer.parseInt(ccNumber.substring(i, i + 1));
-                if (alternate)
-                {
-                    n *= 2;
-                    if (n > 9)
-                    {
-                        n = (n % 10) + 1;
-                    }
+    private boolean luhn(String ccNumber) {
+        int sum = 0;
+        boolean alternate = false;
+
+        for (int i = ccNumber.length() - 1; i >= 0; i--) {
+            int n = Integer.parseInt(ccNumber.substring(i, i + 1));
+
+            if (alternate) {
+                n *= 2;
+
+                if (n > 9) {
+                    n = (n % 10) + 1;
                 }
-                sum += n;
-                alternate = !alternate;
             }
-            return (sum % 10 == 0);
+            sum += n;
+            alternate = !alternate;
         }
+
+        return (sum % 10 == 0);
+    }
 
     public void pay(JFrame frame,String[] flight,String price, int nrOfPassengers){
     	contentPane = new JPanel();
