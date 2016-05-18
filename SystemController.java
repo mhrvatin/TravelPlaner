@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class SystemController {
-    public static String dbPath = "C:/Users/Administratör/workspace/GIT_JAVA/TravelPlaner/pa1415_group.e2_travelplanner.db";
+    public static String dbPath = "/Users/ericnilsson/Desktop/TravelPlanner/pa1415_group.e2_travelplanner.db";
 	
     public String user;
     public String userName;
