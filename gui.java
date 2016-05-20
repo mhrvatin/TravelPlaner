@@ -27,11 +27,6 @@ public class gui {
     private JTextField lastNameField;
     private JTextField emailField;
     private JTextField passwordConfirmField;
-    private JTextField txtPrice;
-    private JTextField txtDate;
-    private JTextField txtTime;
-    private JTextField txtDate_2;
-    private JTextField txtTime_2;
     private JTextField txtDepartureTime;
     private JTextField txtArrivalTime;
     private JTextField txtPricePerSeat;
@@ -85,6 +80,7 @@ public class gui {
         dateOrigin.setBounds(94, 159, 95, 20);
         frame.getContentPane().add(dateOrigin);
         Date dateString = new Date();
+        Date todaysDate = new Date();
     	dateOrigin.setDate(dateString);
 
         JLabel lblOrigin = new JLabel("Origin");
@@ -115,6 +111,10 @@ public class gui {
                 if(origin.equals("") || destination.equals("")) {
                     JOptionPane.showMessageDialog(frame, "not valid search Params",
                             "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                }
+                else if(dateString.before(todaysDate)){
+                	JOptionPane.showMessageDialog(frame, "You cannot search for old flights",
+                            "Couldn't search", JOptionPane.ERROR_MESSAGE);                	
                 }
                 else{
                     String[][] flights = sc.getFlights(origin, destination, formatedDate);
@@ -193,6 +193,8 @@ public class gui {
             	initialize(frame,false);
             	frame.getContentPane().revalidate();
             	frame.getContentPane().repaint();
+            	JOptionPane.showMessageDialog(frame, "You are now signed out",
+                        "Signed out successfully", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         btnLogout.setBounds(500, 11, 89, 21);
@@ -234,6 +236,8 @@ public class gui {
                         initialize(frame,true);
                         frame.getContentPane().revalidate();
                         frame.getContentPane().repaint();
+                        JOptionPane.showMessageDialog(frame, "You are now signed in",
+                                "Signed in successfully", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(frame, "Wrong username/password",
                             "Couldn't sign in", JOptionPane.ERROR_MESSAGE);
@@ -325,6 +329,8 @@ public class gui {
                                 initialize(frame, false);
                                 frame.getContentPane().validate();
                                 frame.getContentPane().repaint();
+                                JOptionPane.showMessageDialog(frame, "You are now registered",
+                                        "Registered successfully", JOptionPane.INFORMATION_MESSAGE);
                             }else{
                                 JOptionPane.showMessageDialog(frame, "email already exist",
                                         "Couldn't register", JOptionPane.ERROR_MESSAGE);
@@ -522,7 +528,6 @@ public class gui {
 
         String arrTime = flight[4].substring(0, 2);
         int time = Integer.parseInt(arrTime) + Integer.parseInt(flight[5].substring(0, 2));
-        System.out.println(time);
         String arrivalTime = Integer.toString(time) + ":" + flight[4].substring(3, 5);
         
         JLabel txtTime_2 = new JLabel(arrivalTime);
@@ -605,27 +610,6 @@ public class gui {
 
     }
 
-    private boolean luhn(String ccNumber) {
-        int sum = 0;
-        boolean alternate = false;
-
-        for (int i = ccNumber.length() - 1; i >= 0; i--) {
-            int n = Integer.parseInt(ccNumber.substring(i, i + 1));
-
-            if (alternate) {
-                n *= 2;
-
-                if (n > 9) {
-                    n = (n % 10) + 1;
-                }
-            }
-            sum += n;
-            alternate = !alternate;
-        }
-
-        return (sum % 10 == 0);
-    }
-
     public void pay(JFrame frame,String[] flight,String price, int nrOfPassengers){
     	contentPane = new JPanel();
     	user_logout(frame);
@@ -662,23 +646,28 @@ public class gui {
         btnPay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	int id=Integer.parseInt(flight[0]);
-            	System.out.println("ID:" + id);
             	String cardNr=txtCardNr.getText();
-            	System.out.println(cardNr);
+            	
             	if(cardNr.equals(""))
             	{
-            		System.out.println("inne i if satsen");
-            		JOptionPane.showMessageDialog(frame, "invalid card number",
-                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
-            	} else{
-            		
-            		System.out.println("inte inne i if satsen");
-            		sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price));
-                	
-            		frame.getContentPane().removeAll(); 
-            		initialize(frame,true);
-            		frame.getContentPane().validate();
-            		frame.getContentPane().repaint();
+            		JOptionPane.showMessageDialog(frame, "Card number cannot be empty",
+                            "No card number supplied", JOptionPane.ERROR_MESSAGE);
+            	} else {
+            		try{
+						Long.parseLong(cardNr, 10);
+	            		sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price));
+	                	
+	            		frame.getContentPane().removeAll(); 
+	            		initialize(frame,true);
+	            		frame.getContentPane().validate();
+	            		frame.getContentPane().repaint();
+	            		JOptionPane.showMessageDialog(frame, "Payment went successfully",
+	                            "Payment successfully", JOptionPane.INFORMATION_MESSAGE);	
+	                  
+            		} catch (NumberFormatException ex) {
+                		JOptionPane.showMessageDialog(frame, "cannot be string",
+                                "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                	} 
             	}
             }
         });

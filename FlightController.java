@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FlightController {
     public FlightController() {
@@ -24,11 +22,6 @@ public class FlightController {
             if(!SQL.equals("")){
                 statement.executeUpdate(SQL);
             }
-            ResultSet rs = statement.executeQuery("SELECT * FROM flights");
-
-            /*while(rs.next()) {
-                // read the result set
-            }*/
         } catch(SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -59,11 +52,6 @@ public class FlightController {
             if(!SQL.equals("")){
                 statement.executeUpdate(SQL);
             }
-            ResultSet rs = statement.executeQuery("SELECT * FROM flights");
-
-            /*while(rs.next()) {
-                // read the result set
-            }*/
         } catch(SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -94,9 +82,6 @@ public class FlightController {
             ResultSet rs = statement.executeQuery(SQL);    
 
             while(rs.next()) {
-                // read the result set
-                System.out.println("flight_id = " + rs.getString("flight_id"));
-                System.out.println("seats = " + rs.getString("nr_of_seats"));
                 flight[0] = rs.getInt("flight_id");
                 flight[1] = rs.getInt("nr_of_seats");
                 }

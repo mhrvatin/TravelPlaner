@@ -2,11 +2,10 @@ package travelplanner;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 public class SystemController {
 
-    public static String dbPath = "/home/macke/documents/skola/TravelPlanner/pa1415_group.e2_travelplanner.db";
+    public static String dbPath = "/Users/ericnilsson/Desktop/TravelPlanner/pa1415_group.e2_travelplanner.db";
 
 	
     public String user;

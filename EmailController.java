@@ -5,125 +5,74 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
  
  
 public class EmailController {
-   
     private String user;
     private EmailMock mock;
-    //private String dbPath = "/pa1415_group.e2_travelplanner.db";
    
-    public EmailController(String user){
-        //this.user contains the email
-    	this.user=user;
+    public EmailController(String user) {
+    	this.user = user;
         mock = new EmailMock();
-       
     }
    
     //TASK: Sends the reciept to the email adress of the current logged in user after a successful booking
-    public boolean sendRecipt(){
-    	
-    	/*
-        //Get current users email ( ? = private varaible user in the class)
-        //Select email From Users where username = ?
-        Connection connection = null;
-        String email=null;
+    public boolean sendRecipt() {
+        boolean ret = mock.sendEmail(this.user, this.makeRecipt());
        
-        try {
-           
-            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
-            Statement statement = connection.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
-           
-            ResultSet rs = statement.executeQuery("SELECT email FROM users WHERE email = '" + this.user +"'");
-           
-            while(rs.next()) {
-                // read the result set
-               
-                //Save users email in variable (String email)
-                //String email = Value from database;
-                email=rs.getString("email");
-            }
-        } catch(SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            System.err.println(e.getMessage());
-        } finally {
-            try {
-                if(connection != null)
-                    connection.close();
-            } catch(SQLException e) {
-                // connection close failed.
-                System.err.println(e);
-            }
-        }
-        */
-
-        boolean ret=mock.sendEmail(this.user, this.makeRecipt());
-       
-        return true;
-       
-       
-       
+        return ret;
     }
    
     //TASK: Collects the info about the transcation out of data that is collected from the database
-    private String getTranscation(){
-
+    private String getTranscation() {
         //Get current user transaction (? = private varaible user in the class)
         //Select transaction From Transactions where username = ? ORDER BY created desc Limit 1;
         Connection connection = null;
-        int transaction=0;
+        int transaction = 0;
         int price = 0;
-        Date date = new Date();
+        String date = "";
 
         try {
-           
             connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
            
-            ResultSet rs = statement.executeQuery("SELECT * FROM transactions WHERE email = '" + this.user +"'"
-                                                  + "ORDER BY transaction_id desc LIMIT 1");
+            ResultSet rs = statement.executeQuery("SELECT * FROM transactions WHERE email = '" + this.user
+                                                  + "' ORDER BY transaction_id desc LIMIT 1");
            
             while(rs.next()) {
                 //Save data from database in the variable (int transaction)
                 //int transaction = Value from database
-                transaction=rs.getInt("transaction_id");
-                price=rs.getInt("price");
-                date=rs.getDate("date");
-
+                transaction = rs.getInt("transaction_id");
+                price = rs.getInt("price");
+                date = rs.getString("date");
             }
         } catch(SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
         } finally {
             try {
-                if(connection != null)
+                if (connection != null)
                     connection.close();
-            } catch(SQLException e) {
+            } catch (SQLException e) {
                 // connection close failed.
                 System.err.println(e);
             }
         }
 
-        String allInfo="Transaction id: "+ transaction +" Price: "+ price + " Date: "+ date;
-        System.out.println(allInfo);
+        String allInfo = "Transaction id: "+ transaction +" Price: "+ price + " Date: "+ date;
         return allInfo;
     }
+    
     //TASK: Creates the reciept out of data from the getTranscation function
-    private String makeRecipt(){
-
+    private String makeRecipt() {
         String allInfo = this.getTranscation();
 
         //Get current user info (? = private varaible user in the class)
         // Select * From Users where username = ?
         Connection connection = null;
-        String name=null;
-        String lastName=null;
-        String email=null;
+        String name = null;
+        String lastName = null;
+        String email = null;
        
         try {
            
@@ -134,56 +83,43 @@ public class EmailController {
             ResultSet rs = statement.executeQuery("SELECT * FROM users WHERE email = '" + this.user +"'");
            
             while(rs.next()) {
-                // read the result set
-               
                 //Save data from database in the variables:
                 //(String userName,  String name,  String lastName, String email);
-                name=rs.getString("first_name");
-                lastName=rs.getString("last_name");
-                email=rs.getString("email");
-               
+                name = rs.getString("first_name");
+                lastName = rs.getString("last_name");
+                email = rs.getString("email");
             }
         } catch(SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
         } finally {
             try {
                 if(connection != null)
                     connection.close();
             } catch(SQLException e) {
-                // connection close failed.
                 System.err.println(e);
             }
         }
-       
-       
        
         String reciept="Recipt from TravelPlanner \n"
         + "Hello " + name + " " +lastName +"! "+ allInfo + " on your account "
         +" with the register email: " + email ;
 
-        System.out.println(reciept);
         return reciept;
-       
     }
-    public boolean sendActivate()
-    {
-       
+    
+    public boolean sendActivate() {
     	Connection connection = null;
         String activateHash = null;
        
         try {
-           
             connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
            
             ResultSet rs = statement.executeQuery("SELECT activation_hash FROM users WHERE email = '" + this.user +"'");
 
-                // read the result set
-                activateHash=rs.getString("activation_hash");
-                
+            // read the result set
+            activateHash=rs.getString("activation_hash");
         } catch(SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
@@ -201,7 +137,6 @@ public class EmailController {
         String message = "Use this hash to verify your account: " + activateHash;
        
         return mock.sendEmail(this.user, message);
-       
     }
 }
 

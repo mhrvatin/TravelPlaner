@@ -7,11 +7,8 @@ public class EmailMock{
     public EmailMock() {
         
     }
+    
     public boolean sendEmail(String email, String message){
-        
         return true;
     }
-    
-    
-    
 }
