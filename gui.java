@@ -750,7 +750,7 @@ public class gui {
         btnAddFlight.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.getContentPane().removeAll(); 
-                adminEditAdd(frame);
+                adminEditAdd(frame,null);
                 frame.getContentPane().validate();
                 frame.getContentPane().repaint();
             }
@@ -761,8 +761,8 @@ public class gui {
         JButton btnEdit = new JButton("Edit");
         btnEdit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                frame.getContentPane().removeAll(); 
-                adminEditAdd(frame);
+                frame.getContentPane().removeAll();
+                adminEditAdd(frame,flights[table.getSelectedRow()]);
                 frame.getContentPane().validate();
                 frame.getContentPane().repaint();		
             }
@@ -774,8 +774,11 @@ public class gui {
         btnRemove.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.getContentPane().removeAll();
-                //System.out.println(table.getValueAt(table.getSelectedRow(), ));
-                //sc.removeFlight(table.getSelectedRow())
+
+                //TODO add exception code
+                sc.removeFlight(Integer.parseInt(flights[table.getSelectedRow()][0]));
+                
+                adminMain(frame);
                 frame.getContentPane().validate();
                 frame.getContentPane().repaint();		
             }
@@ -784,7 +787,7 @@ public class gui {
         frame.getContentPane().add(btnRemove);
     }
     
-    public void adminEditAdd(JFrame frame){
+    public void adminEditAdd(JFrame frame, String[] flight){
     	contentPane = new JPanel();
     	user_logout(frame);
 		
@@ -820,9 +823,6 @@ public class gui {
         dateDeparture.setBounds(119, 135, 178, 20);
         frame.getContentPane().add(dateDeparture);
 
-        JDateChooser dateArrival = new JDateChooser();
-        dateArrival.setBounds(409, 135, 178, 20);
-        frame.getContentPane().add(dateArrival);
 
         JSpinner spNrOfSeats = new JSpinner();
         spNrOfSeats.setBounds(119, 245, 89, 20);
@@ -840,9 +840,6 @@ public class gui {
         lblDepartureDate.setBounds(119, 114, 89, 14);
         frame.getContentPane().add(lblDepartureDate);
 
-        JLabel lblArrivalDate = new JLabel("Arrival Date");
-        lblArrivalDate.setBounds(409, 110, 151, 14);
-        frame.getContentPane().add(lblArrivalDate);
 
         JLabel lblDepartureTime = new JLabel("Departure Time");
         lblDepartureTime.setBounds(119, 166, 124, 14);
@@ -859,6 +856,17 @@ public class gui {
         JLabel lblPricePerSeat = new JLabel("Price per seat");
         lblPricePerSeat.setBounds(409, 220, 96, 14);
         frame.getContentPane().add(lblPricePerSeat);
+        
+        if(flight != null) {
+        	txtOrigin.setText(flight[1]);
+        	txtDestination.setText(flight[2]);
+        	txtDepartureTime.setText(flight[4]);
+        	txtTravelTime.setText(flight[5]);
+        	
+        	
+        	
+        	
+        }
         
         JButton btnSubmit = new JButton("Submit");
         btnSubmit.addActionListener(new ActionListener() {

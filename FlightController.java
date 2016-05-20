@@ -24,11 +24,7 @@ public class FlightController {
             if(!SQL.equals("")){
                 statement.executeUpdate(SQL);
             }
-            ResultSet rs = statement.executeQuery("SELECT * FROM flights");
-
-            /*while(rs.next()) {
-                // read the result set
-            }*/
+            
         } catch(SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found
