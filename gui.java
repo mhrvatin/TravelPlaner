@@ -99,30 +99,39 @@ public class gui {
                 String destination = txtDestination.getText();
                 
                 Date dateString = dateOrigin.getDate();
-                if(dateString==null)
+               /* if(dateString==null)
                 {
                 	JOptionPane.showMessageDialog(frame, "not valid search Params",
                             "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                }*/
+                try{
+                	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+                    String formatedDate = format.format(dateString);
+                    
+                    if(origin.equals("") || destination.equals("")) {
+                        JOptionPane.showMessageDialog(frame, "not valid search Params",
+                                "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if(dateString.before(todaysDate)){
+                    	JOptionPane.showMessageDialog(frame, "You cannot search for old flights",
+                                "Couldn't search", JOptionPane.ERROR_MESSAGE);                	
+                    }
+                    else{
+                        String[][] flights = sc.getFlights(origin, destination, formatedDate);
+                        frame.getContentPane().removeAll();
+                        frame.getContentPane().revalidate();
+                        search(frame, flights, origin, destination, dateString);
+                        frame.getContentPane().repaint();
+                    }  
+                } catch (NullPointerException e){
+                	System.out.println(e);
+                	JOptionPane.showMessageDialog(frame, "Invalid date",
+                            "Invalid date", JOptionPane.ERROR_MESSAGE);    
                 }
                 
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-                String formatedDate = format.format(dateString); 
-                if(origin.equals("") || destination.equals("")) {
-                    JOptionPane.showMessageDialog(frame, "not valid search Params",
-                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
-                }
-                else if(dateString.before(todaysDate)){
-                	JOptionPane.showMessageDialog(frame, "You cannot search for old flights",
-                            "Couldn't search", JOptionPane.ERROR_MESSAGE);                	
-                }
-                else{
-                    String[][] flights = sc.getFlights(origin, destination, formatedDate);
-                    frame.getContentPane().removeAll();
-                    frame.getContentPane().revalidate();
-                    search(frame, flights, origin, destination, dateString);
-                    frame.getContentPane().repaint();
-                }    
+                
+                  
             }
         });
         btnSearch.setBounds(253, 304, 89, 23);
@@ -246,7 +255,7 @@ public class gui {
                     	JOptionPane.showMessageDialog(frame, "You are now signed in",
                                 "Signed in successfully", JOptionPane.INFORMATION_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(frame, "Wrong username/password",
+                        JOptionPane.showMessageDialog(frame, "Couldn't sign in",
                             "Couldn't sign in", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NoSuchAlgorithmException ex) {
@@ -409,6 +418,7 @@ public class gui {
         dateOrigin.setDate(date);
         dateOrigin.setBounds(411, 49, 95, 20);
         frame.getContentPane().add(dateOrigin);
+        Date todaysDate = new Date();
 
         JLabel lblOrigin = new JLabel("Origin");
         lblOrigin.setBounds(66, 24, 46, 14);
@@ -425,27 +435,30 @@ public class gui {
                 String destination = txtDestination.getText();
 
                 Date dateString = dateOrigin.getDate();
-                if(dateString==null)
-                {
-                	JOptionPane.showMessageDialog(frame, "not valid search Params",
-                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
-                }
-                
-                
-                
-                
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                String formatedDate = format.format(dateString); 
-                if(origin.equals("") || destination.equals("")) {
-                    JOptionPane.showMessageDialog(frame, "not valid search Params",
-                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
-                }
-                else{
-                    String[][] flights = sc.getFlights(origin, destination, formatedDate);
-                    frame.getContentPane().removeAll();
-                    frame.getContentPane().revalidate();
-                    search(frame, flights, origin, destination, dateString);
-                    frame.getContentPane().repaint();
+                try{
+                	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+                    String formatedDate = format.format(dateString);
+                    
+                    if(origin.equals("") || destination.equals("")) {
+                        JOptionPane.showMessageDialog(frame, "not valid search Params",
+                                "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else if(dateString.before(todaysDate)){
+                    	JOptionPane.showMessageDialog(frame, "You cannot search for old flights",
+                                "Couldn't search", JOptionPane.ERROR_MESSAGE);                	
+                    }
+                    else{
+                        String[][] flights = sc.getFlights(origin, destination, formatedDate);
+                        frame.getContentPane().removeAll();
+                        frame.getContentPane().revalidate();
+                        search(frame, flights, origin, destination, dateString);
+                        frame.getContentPane().repaint();
+                    }  
+                } catch (NullPointerException ex){
+                	System.out.println(ex);
+                	JOptionPane.showMessageDialog(frame, "Invalid date",
+                            "Invalid date", JOptionPane.ERROR_MESSAGE);    
                 }
             }
         });
