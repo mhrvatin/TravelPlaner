@@ -9,6 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JDateChooser;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.event.ChangeListener;
@@ -27,14 +29,10 @@ public class gui {
     private JTextField lastNameField;
     private JTextField emailField;
     private JTextField passwordConfirmField;
-    private JTextField txtPrice;
-    private JTextField txtDate;
-    private JTextField txtTime;
-    private JTextField txtDate_2;
-    private JTextField txtTime_2;
     private JTextField txtDepartureTime;
-    private JTextField txtArrivalTime;
+    private JTextField txtTravelTime;
     private JTextField txtPricePerSeat;
+    private JTextField txtNrOfSeats;
     private final SystemController sc = new SystemController();
 
     
@@ -85,6 +83,7 @@ public class gui {
         dateOrigin.setBounds(94, 159, 95, 20);
         frame.getContentPane().add(dateOrigin);
         Date dateString = new Date();
+        Date todaysDate = new Date();
     	dateOrigin.setDate(dateString);
 
         JLabel lblOrigin = new JLabel("Origin");
@@ -116,6 +115,10 @@ public class gui {
                     JOptionPane.showMessageDialog(frame, "not valid search Params",
                             "Couldn't search", JOptionPane.ERROR_MESSAGE);
                 }
+                else if(dateString.before(todaysDate)){
+                	JOptionPane.showMessageDialog(frame, "You cannot search for old flights",
+                            "Couldn't search", JOptionPane.ERROR_MESSAGE);                	
+                }
                 else{
                     String[][] flights = sc.getFlights(origin, destination, formatedDate);
                     frame.getContentPane().removeAll();
@@ -143,7 +146,7 @@ public class gui {
             	
             	frame.getContentPane().removeAll();
             	frame.getContentPane().revalidate();
-            	adminMain(frame);
+            	adminMain(frame,null);
             	frame.getContentPane().repaint();
             }
         });
@@ -193,6 +196,8 @@ public class gui {
             	initialize(frame,false);
             	frame.getContentPane().revalidate();
             	frame.getContentPane().repaint();
+            	JOptionPane.showMessageDialog(frame, "You are now signed out",
+                        "Signed out successfully", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         btnLogout.setBounds(500, 11, 89, 21);
@@ -229,11 +234,20 @@ public class gui {
                 try {
                     boolean res = sc.login(usernameField.getText(), passwordField.getText());
                     
-                    if (res) {
+                    if (res && sc.user.equals("ADMIN")) {
                         frame.getContentPane().removeAll();
-                        initialize(frame,true);
+                        adminMain(frame,null);
                         frame.getContentPane().revalidate();
                         frame.getContentPane().repaint();
+                        JOptionPane.showMessageDialog(frame, "You are now signed in",
+                                "Signed in successfully", JOptionPane.INFORMATION_MESSAGE);
+                    } else if(res) {
+                    	frame.getContentPane().removeAll();
+                    	frame.getContentPane().revalidate();
+                    	initialize(frame,true);
+                    	frame.getContentPane().repaint();
+                    	JOptionPane.showMessageDialog(frame, "You are now signed in",
+                                "Signed in successfully", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(frame, "Wrong username/password",
                             "Couldn't sign in", JOptionPane.ERROR_MESSAGE);
@@ -325,6 +339,8 @@ public class gui {
                                 initialize(frame, false);
                                 frame.getContentPane().validate();
                                 frame.getContentPane().repaint();
+                                JOptionPane.showMessageDialog(frame, "You are now registered",
+                                        "Registered successfully", JOptionPane.INFORMATION_MESSAGE);
                             }else{
                                 JOptionPane.showMessageDialog(frame, "email already exist",
                                         "Couldn't register", JOptionPane.ERROR_MESSAGE);
@@ -443,11 +459,16 @@ public class gui {
         JButton btnBook = new JButton("Book");
         btnBook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String[] flight = flights[table.getSelectedRow()];
-                frame.getContentPane().removeAll();
-                book(frame, flight);
-                frame.getContentPane().revalidate();
-                frame.getContentPane().repaint();
+            	if(table.getSelectedRow() != -1){
+            		String[] flight = flights[table.getSelectedRow()];
+                    frame.getContentPane().removeAll();
+                    book(frame, flight);
+                    frame.getContentPane().revalidate();
+                    frame.getContentPane().repaint();
+            	}else{
+                	JOptionPane.showMessageDialog(frame, "Something went wrong!",
+                            "Please select a row!", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         btnBook.setBounds(280, 424, 89, 23);
@@ -522,7 +543,6 @@ public class gui {
 
         String arrTime = flight[4].substring(0, 2);
         int time = Integer.parseInt(arrTime) + Integer.parseInt(flight[5].substring(0, 2));
-        System.out.println(time);
         String arrivalTime = Integer.toString(time) + ":" + flight[4].substring(3, 5);
         
         JLabel txtTime_2 = new JLabel(arrivalTime);
@@ -605,27 +625,6 @@ public class gui {
 
     }
 
-    private boolean luhn(String ccNumber) {
-        int sum = 0;
-        boolean alternate = false;
-
-        for (int i = ccNumber.length() - 1; i >= 0; i--) {
-            int n = Integer.parseInt(ccNumber.substring(i, i + 1));
-
-            if (alternate) {
-                n *= 2;
-
-                if (n > 9) {
-                    n = (n % 10) + 1;
-                }
-            }
-            sum += n;
-            alternate = !alternate;
-        }
-
-        return (sum % 10 == 0);
-    }
-
     public void pay(JFrame frame,String[] flight,String price, int nrOfPassengers){
     	contentPane = new JPanel();
     	user_logout(frame);
@@ -662,23 +661,27 @@ public class gui {
         btnPay.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	int id=Integer.parseInt(flight[0]);
-            	System.out.println("ID:" + id);
             	String cardNr=txtCardNr.getText();
-            	System.out.println(cardNr);
-            	if(cardNr.equals(""))
-            	{
-            		System.out.println("inne i if satsen");
-            		JOptionPane.showMessageDialog(frame, "invalid card number",
-                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
-            	} else{
-            		
-            		System.out.println("inte inne i if satsen");
-            		sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price));
-                	
-            		frame.getContentPane().removeAll(); 
-            		initialize(frame,true);
-            		frame.getContentPane().validate();
-            		frame.getContentPane().repaint();
+            	
+            	if(cardNr.equals("")) {
+            		JOptionPane.showMessageDialog(frame, "Card number cannot be empty",
+                            "No card number supplied", JOptionPane.ERROR_MESSAGE);
+            	} else {
+            		try{
+						Long.parseLong(cardNr, 10);
+	            		sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price));
+	                	
+	            		frame.getContentPane().removeAll(); 
+	            		initialize(frame,true);
+	            		frame.getContentPane().validate();
+	            		frame.getContentPane().repaint();
+	            		JOptionPane.showMessageDialog(frame, "Payment went successfully",
+	                            "Payment successfully", JOptionPane.INFORMATION_MESSAGE);	
+	                  
+            		} catch (NumberFormatException ex) {
+                		JOptionPane.showMessageDialog(frame, "cannot be string",
+                                "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                	}
             	}
             }
         });
@@ -698,7 +701,8 @@ public class gui {
         frame.getContentPane().add(btnHome);
     }
     
-    public void adminMain(JFrame frame){
+    public void adminMain(JFrame frame,String[][] flights){
+    	
     	contentPane = new JPanel();
     	user_logout(frame);
 		
@@ -727,9 +731,44 @@ public class gui {
         dateOrigin.setBounds(380, 60, 95, 20);
         frame.getContentPane().add(dateOrigin);
 
-        JButton button = new JButton("Search");
-        button.setBounds(496, 59, 89, 23);
-        frame.getContentPane().add(button);
+        Date todaysDate = new Date();
+        
+        JButton btnSearch = new JButton("Search");
+        btnSearch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                String origin = txtOrigin.getText();
+                String destination = txtDestination.getText();
+                
+                Date dateString = dateOrigin.getDate();
+                if(dateString==null)
+                {
+                	JOptionPane.showMessageDialog(frame, "not valid search Params",
+                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                }
+                
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+                String formatedDate = format.format(dateString); 
+                if(origin.equals("") || destination.equals("")) {
+                    JOptionPane.showMessageDialog(frame, "not valid search Params",
+                            "Couldn't search", JOptionPane.ERROR_MESSAGE);
+                }
+                else if(dateString.before(todaysDate)){
+                	JOptionPane.showMessageDialog(frame, "You cannot search for old flights",
+                            "Couldn't search", JOptionPane.ERROR_MESSAGE);                	
+                }
+                else{
+                    String[][] flights = sc.getFlights(origin, destination, formatedDate);
+                    frame.getContentPane().removeAll();
+                    frame.getContentPane().revalidate();
+                    adminMain(frame,flights);
+                    frame.getContentPane().repaint();
+                }    
+            }
+        });
+        btnSearch.setBounds(496, 59, 89, 23);
+        frame.getContentPane().add(btnSearch);
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -743,8 +782,24 @@ public class gui {
         model.addColumn("Destination");
         model.addColumn("Date");
 
-        for(int i = 0; i < 10; i++){
-            model.insertRow(i,new Object[] {"test","test","test"});
+        
+        if(flights == null){
+        	flights = sc.getAllFlights();
+        	for (int i = 0; i <= 25; i++) {
+                if (flights[i][0] != null) {
+                	model.insertRow(i, new Object[]{flights[i][1], flights[i][2], flights[i][3]});
+                }else{
+                	i = 25;
+                }
+            }
+        }else{
+        	for (int i = 0; i <= 25; i++) {
+                if (flights[i][0] != null) {
+                	model.insertRow(i, new Object[]{flights[i][1], flights[i][2], flights[i][3]});
+                }else{
+                	i = 25;
+                }
+            }
         }
 
         scrollPane.setViewportView(table);
@@ -753,34 +808,83 @@ public class gui {
         btnAddFlight.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.getContentPane().removeAll(); 
-                adminEditAdd(frame);
+                adminEditAdd(frame,null);
                 frame.getContentPane().validate();
                 frame.getContentPane().repaint();
             }
         });
         btnAddFlight.setBounds(606, 93, 89, 23);
         frame.getContentPane().add(btnAddFlight);
-
+        
+        String[][] getAllFligths = sc.getAllFlights();
+        
         JButton btnEdit = new JButton("Edit");
         btnEdit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                frame.getContentPane().removeAll(); 
-                adminEditAdd(frame);
-                frame.getContentPane().validate();
-                frame.getContentPane().repaint();		
+            	if(table.getSelectedRow() != -1){
+            		frame.getContentPane().removeAll();
+            		adminEditAdd(frame,getAllFligths[table.getSelectedRow()]);
+            		frame.getContentPane().validate();
+            		frame.getContentPane().repaint();            		
+            	}else{
+                	JOptionPane.showMessageDialog(frame, "Something went wrong!",
+                            "Please select a row!", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         btnEdit.setBounds(606, 142, 89, 23);
         frame.getContentPane().add(btnEdit);
 
         JButton btnRemove = new JButton("Remove");
+        btnRemove.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.getContentPane().removeAll();
+
+                //TODO add exception code
+                if(table.getSelectedRow() != -1){
+                	sc.removeFlight(Integer.parseInt(getAllFligths[table.getSelectedRow()][0]));
+                    adminMain(frame,null);
+                    frame.getContentPane().validate();
+                    frame.getContentPane().repaint();
+                }else{
+                	JOptionPane.showMessageDialog(frame, "Something went wrong!",
+                            "Please select a row!", JOptionPane.ERROR_MESSAGE);
+                }
+                		
+            }
+        });
         btnRemove.setBounds(606, 190, 89, 23);
         frame.getContentPane().add(btnRemove);
+        
+        JButton btnViewAll = new JButton("View All");
+        btnViewAll.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.getContentPane().removeAll();
+                adminMain(frame,null);
+                frame.getContentPane().validate();
+                frame.getContentPane().repaint();		
+            }
+        });
+        btnViewAll.setBounds(606, 230, 89, 23);
+        frame.getContentPane().add(btnViewAll);
     }
     
-    public void adminEditAdd(JFrame frame){
+    public void adminEditAdd(JFrame frame, String[] flight){
     	contentPane = new JPanel();
     	user_logout(frame);
+    	
+    	JButton btnHome = new JButton("Back");
+        btnHome.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		frame.getContentPane().removeAll();
+        		adminMain(frame,null);
+             	frame.getContentPane().revalidate();
+             	frame.getContentPane().repaint();
+        	}
+        });
+        btnHome.setBounds(0, 2, 70, 23);
+        frame.getContentPane().add(btnHome);
+        
 		
     	frame.getContentPane().setLayout(null);
         frame.getContentPane().add(contentPane);
@@ -800,39 +904,24 @@ public class gui {
         txtDepartureTime.setBounds(119, 191, 178, 20);
         frame.getContentPane().add(txtDepartureTime);
 
-        txtArrivalTime = new JTextField();
-        txtArrivalTime.setColumns(10);
-        txtArrivalTime.setBounds(409, 191, 178, 20);
-        frame.getContentPane().add(txtArrivalTime);
+        txtTravelTime = new JTextField();
+        txtTravelTime.setColumns(10);
+        txtTravelTime.setBounds(409, 191, 178, 20);
+        frame.getContentPane().add(txtTravelTime);
 
         txtPricePerSeat = new JTextField();
         txtPricePerSeat.setColumns(10);
         txtPricePerSeat.setBounds(409, 245, 178, 20);
         frame.getContentPane().add(txtPricePerSeat);
 
-        JButton btnSubmit = new JButton("Submit");
-        btnSubmit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                frame.getContentPane().removeAll(); 
-                adminMain(frame);
-                frame.getContentPane().validate();
-                frame.getContentPane().repaint();
-            }
-        });
-        btnSubmit.setBounds(304, 336, 89, 23);
-        frame.getContentPane().add(btnSubmit);
-
         JDateChooser dateDeparture = new JDateChooser();
         dateDeparture.setBounds(119, 135, 178, 20);
         frame.getContentPane().add(dateDeparture);
 
-        JDateChooser dateArrival = new JDateChooser();
-        dateArrival.setBounds(409, 135, 178, 20);
-        frame.getContentPane().add(dateArrival);
 
-        JSpinner spNrOfSeats = new JSpinner();
-        spNrOfSeats.setBounds(119, 245, 89, 20);
-        frame.getContentPane().add(spNrOfSeats);
+        txtNrOfSeats = new JTextField();
+        txtNrOfSeats.setBounds(119, 245, 89, 20);
+        frame.getContentPane().add(txtNrOfSeats);
 
         JLabel lblOrigin = new JLabel("Origin");
         lblOrigin.setBounds(119, 61, 46, 14);
@@ -846,17 +935,14 @@ public class gui {
         lblDepartureDate.setBounds(119, 114, 89, 14);
         frame.getContentPane().add(lblDepartureDate);
 
-        JLabel lblArrivalDate = new JLabel("Arrival Date");
-        lblArrivalDate.setBounds(409, 110, 151, 14);
-        frame.getContentPane().add(lblArrivalDate);
 
         JLabel lblDepartureTime = new JLabel("Departure Time");
         lblDepartureTime.setBounds(119, 166, 124, 14);
         frame.getContentPane().add(lblDepartureTime);
 
-        JLabel lblArrivalTime = new JLabel("Arrival Time");
-        lblArrivalTime.setBounds(409, 166, 124, 14);
-        frame.getContentPane().add(lblArrivalTime);
+        JLabel lblTravelTime = new JLabel("Travel Time");
+        lblTravelTime.setBounds(409, 166, 124, 14);
+        frame.getContentPane().add(lblTravelTime);
 
         JLabel lblSeats = new JLabel("Seats");
         lblSeats.setBounds(119, 222, 46, 14);
@@ -865,5 +951,65 @@ public class gui {
         JLabel lblPricePerSeat = new JLabel("Price per seat");
         lblPricePerSeat.setBounds(409, 220, 96, 14);
         frame.getContentPane().add(lblPricePerSeat);
+        
+        if(flight != null) {
+        	txtOrigin.setText(flight[1]);
+        	txtDestination.setText(flight[2]);
+        	txtDepartureTime.setText(flight[4]);
+        	txtTravelTime.setText(flight[5]);
+        	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        	try {
+				dateDeparture.setDate(format.parse(flight[3]));
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        	txtPricePerSeat.setText(flight[6]);
+        	txtNrOfSeats.setText(flight[7]);
+        }
+        
+        JButton btnSubmit = new JButton("Submit");
+        btnSubmit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+            	Date dateString = dateDeparture.getDate();
+            	
+            	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                String formatedDate = format.format(dateString);
+                if(flight == null){
+                	if(sc.addFlight(txtOrigin.getText(), txtDestination.getText(), formatedDate, txtDepartureTime.getText(), txtTravelTime.getText(), Integer.parseInt(txtPricePerSeat.getText()), Integer.parseInt(txtNrOfSeats.getText()))) {
+                		
+                		JOptionPane.showMessageDialog(frame, "Success!",
+                                "Flight was Added", JOptionPane.OK_OPTION);
+                		
+                		frame.getContentPane().removeAll(); 
+                		adminMain(frame,null);
+                		frame.getContentPane().validate();
+                		frame.getContentPane().repaint();
+                		
+                	} else {
+                		JOptionPane.showMessageDialog(frame, "Something went wrong!",
+                                "Something went wrong, the flight was not added", JOptionPane.ERROR_MESSAGE);	
+                	}
+                }else{
+                	if(sc.updateFlight(Integer.parseInt(flight[0]),txtOrigin.getText(), txtDestination.getText(), formatedDate, txtDepartureTime.getText(), txtTravelTime.getText(), Integer.parseInt(txtPricePerSeat.getText()), Integer.parseInt(txtNrOfSeats.getText()))){
+                		JOptionPane.showMessageDialog(frame, "Success!",
+                                "Flight was Added", JOptionPane.OK_OPTION);
+                		
+                		frame.getContentPane().removeAll(); 
+                		adminMain(frame,null);
+                		frame.getContentPane().validate();
+                		frame.getContentPane().repaint();
+                	}else{
+                		JOptionPane.showMessageDialog(frame, "Something went wrong!",
+                                "Something went wrong, the flight was not added", JOptionPane.ERROR_MESSAGE);
+                	}
+                	
+                }
+            	
+            }
+        });
+        btnSubmit.setBounds(304, 336, 89, 23);
+        frame.getContentPane().add(btnSubmit);
     }
 }

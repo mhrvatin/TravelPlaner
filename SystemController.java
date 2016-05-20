@@ -2,13 +2,11 @@ package travelplanner;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 public class SystemController {
 
-    public static String dbPath = "/home/macke/documents/skola/TravelPlanner/pa1415_group.e2_travelplanner.db";
+    public static String dbPath = "/Users/ericnilsson/Desktop/TravelPlanner/pa1415_group.e2_travelplanner.db";
 
-	
     public String user;
     public String userName;
     private FlightController flight;
@@ -85,21 +83,30 @@ public class SystemController {
     
     public boolean bookFlight(int id, int nrOfPassangers, String cardNr, int price) {
     	boolean success = false;
-    	this.pay = new PaymentController(cardNr, price, this.user);
     	
-    	if(pay.makePayment()) {
+    	if(this.luhn(cardNr))
+    	{
+    		this.pay = new PaymentController(cardNr, price, this.user);
+    		
     		EmailController ec = new EmailController(this.user);
     		this.flight = new FlightController();
     		
+    		pay.makePayment();
     		ec.sendRecipt();
     		success = this.flight.bookFlight(id, nrOfPassangers);    		
+
     	}
+    	
     	return success;
+    }
+    public String[][] getAllFlights(){
+    	this.flight = new FlightController();
+    	
+    	return this.flight.getAllFlights();
     }
     
     public String[][] getFlights(String origin, String destination, String date) {
         this.flight = new FlightController();
-        flight.removeFullBookedFlight();
         
         //System.out.println(this.flight.getFlights(origin, destination, date));
         return this.flight.getFlights(origin, destination, date);
@@ -107,16 +114,14 @@ public class SystemController {
     
     public String[][] getFlights(int id) {
         this.flight = new FlightController();
-        flight.removeFullBookedFlight();
 
         return this.flight.getFlightsInfo(id);
     }
     
-    public boolean addFlight(String origin, String destination, String deptDate, String deptTime, String travelTime, int nrOfSeats) {
+    public boolean addFlight(String origin, String destination, String deptDate, String deptTime, String travelTime,int price, int nrOfSeats) {
         this.flight = new FlightController();
         
-        //return this.flight.addFlight(origin, destination, deptDate, travelTime, nrOfSeats, nrOfSeats);
-        return true;
+        return this.flight.addFlight(origin, destination, deptDate, deptTime, travelTime, price, nrOfSeats);
     }
     
     public boolean removeFlight(int id) {
@@ -125,10 +130,30 @@ public class SystemController {
         return this.flight.removeFlight(id);
     }
     
-    public boolean updateFlight(String origin, String destination, String deptDate, String deptTime, String travelTime, int nrOfSeats) {
+    public boolean updateFlight(int id, String origin, String destination, String deptDate, String deptTime, String travelTime,int price, int nrOfSeats) {
         this.flight = new FlightController();
         
-        //return this.flight.updateFlight(origin, destination, deptDate, travelTime, nrOfSeats, nrOfSeats);
-        return true;
+        return this.flight.updateFlight(id, origin, destination, deptDate, deptTime, travelTime, price, nrOfSeats);
+    }
+    
+    private boolean luhn(String ccNumber) {
+        int sum = 0;
+        boolean alternate = false;
+
+        for (int i = ccNumber.length() - 1; i >= 0; i--) {
+            int n = Integer.parseInt(ccNumber.substring(i, i + 1));
+
+            if (alternate) {
+                n *= 2;
+
+                if (n > 9) {
+                    n = (n % 10) + 1;
+                }
+            }
+            sum += n;
+            alternate = !alternate;
+        }
+
+        return (sum % 10 == 0);
     }
 }
