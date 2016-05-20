@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class SystemController {
 
-    public static String dbPath = "/Users/ericnilsson/Desktop/TravelPlanner/pa1415_group.e2_travelplanner.db";
+    public static String dbPath = "C:/cygwin64/home/david/projekt/travelplanner/src/travelplanner/pa1415_group.e2_travelplanner.db";
 
     public String user;
     public String userName;
@@ -112,11 +112,6 @@ public class SystemController {
         return this.flight.getFlights(origin, destination, date);
     }
     
-    public String[][] getFlights(int id) {
-        this.flight = new FlightController();
-
-        return this.flight.getFlightsInfo(id);
-    }
     
     public boolean addFlight(String origin, String destination, String deptDate, String deptTime, String travelTime,int price, int nrOfSeats) {
         this.flight = new FlightController();
