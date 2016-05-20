@@ -33,7 +33,7 @@ public class gui {
     private JTextField txtDate_2;
     private JTextField txtTime_2;
     private JTextField txtDepartureTime;
-    private JTextField txtArrivalTime;
+    private JTextField txtTravelTime;
     private JTextField txtPricePerSeat;
     private final SystemController sc = new SystemController();
 
@@ -229,12 +229,17 @@ public class gui {
                 try {
                     boolean res = sc.login(usernameField.getText(), passwordField.getText());
                     
-                    if (res) {
+                    if (res && sc.user.equals("ADMIN")) {
                         frame.getContentPane().removeAll();
-                        initialize(frame,true);
+                        adminMain(frame);
                         frame.getContentPane().revalidate();
                         frame.getContentPane().repaint();
-                    } else {
+                    } else if(res) {
+                    	frame.getContentPane().removeAll();
+                    	frame.getContentPane().revalidate();
+                    	initialize(frame,true);
+                    	frame.getContentPane().repaint();
+                    } else { 
                         JOptionPane.showMessageDialog(frame, "Wrong username/password",
                             "Couldn't sign in", JOptionPane.ERROR_MESSAGE);
                     }
@@ -605,27 +610,6 @@ public class gui {
 
     }
 
-    private boolean luhn(String ccNumber) {
-        int sum = 0;
-        boolean alternate = false;
-
-        for (int i = ccNumber.length() - 1; i >= 0; i--) {
-            int n = Integer.parseInt(ccNumber.substring(i, i + 1));
-
-            if (alternate) {
-                n *= 2;
-
-                if (n > 9) {
-                    n = (n % 10) + 1;
-                }
-            }
-            sum += n;
-            alternate = !alternate;
-        }
-
-        return (sum % 10 == 0);
-    }
-
     public void pay(JFrame frame,String[] flight,String price, int nrOfPassengers){
     	contentPane = new JPanel();
     	user_logout(frame);
@@ -667,18 +651,24 @@ public class gui {
             	System.out.println(cardNr);
             	if(cardNr.equals(""))
             	{
-            		System.out.println("inne i if satsen");
             		JOptionPane.showMessageDialog(frame, "invalid card number",
                             "Couldn't search", JOptionPane.ERROR_MESSAGE);
             	} else{
             		
             		System.out.println("inte inne i if satsen");
-            		sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price));
+            		if(sc.bookFlight(id, nrOfPassengers, cardNr, Integer.parseInt(price)))
+            		{
+            			frame.getContentPane().removeAll(); 
+            			initialize(frame,true);
+            			frame.getContentPane().validate();
+            			frame.getContentPane().repaint();            			
+            		} else {
+            			
+            			JOptionPane.showMessageDialog(frame, "Something went wrong, please try again.",
+                                "Something went wrong", JOptionPane.ERROR_MESSAGE);
+            			
+            		}
                 	
-            		frame.getContentPane().removeAll(); 
-            		initialize(frame,true);
-            		frame.getContentPane().validate();
-            		frame.getContentPane().repaint();
             	}
             }
         });
@@ -743,8 +733,15 @@ public class gui {
         model.addColumn("Destination");
         model.addColumn("Date");
 
-        for(int i = 0; i < 10; i++){
-            model.insertRow(i,new Object[] {"test","test","test"});
+        String[][] flights = sc.getAllFlights();
+        if(flights[0][0] != null){
+        	for (int i = 0; i <= 25; i++) {
+                if (flights[i][0] != null) {
+                	model.insertRow(i, new Object[]{flights[i][1], flights[i][2], flights[i][3]});
+                }else{
+                	i = 25;
+                }
+            }
         }
 
         scrollPane.setViewportView(table);
@@ -774,6 +771,15 @@ public class gui {
         frame.getContentPane().add(btnEdit);
 
         JButton btnRemove = new JButton("Remove");
+        btnRemove.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.getContentPane().removeAll();
+                //System.out.println(table.getValueAt(table.getSelectedRow(), ));
+                //sc.removeFlight(table.getSelectedRow())
+                frame.getContentPane().validate();
+                frame.getContentPane().repaint();		
+            }
+        });
         btnRemove.setBounds(606, 190, 89, 23);
         frame.getContentPane().add(btnRemove);
     }
@@ -800,27 +806,15 @@ public class gui {
         txtDepartureTime.setBounds(119, 191, 178, 20);
         frame.getContentPane().add(txtDepartureTime);
 
-        txtArrivalTime = new JTextField();
-        txtArrivalTime.setColumns(10);
-        txtArrivalTime.setBounds(409, 191, 178, 20);
-        frame.getContentPane().add(txtArrivalTime);
+        txtTravelTime = new JTextField();
+        txtTravelTime.setColumns(10);
+        txtTravelTime.setBounds(409, 191, 178, 20);
+        frame.getContentPane().add(txtTravelTime);
 
         txtPricePerSeat = new JTextField();
         txtPricePerSeat.setColumns(10);
         txtPricePerSeat.setBounds(409, 245, 178, 20);
         frame.getContentPane().add(txtPricePerSeat);
-
-        JButton btnSubmit = new JButton("Submit");
-        btnSubmit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                frame.getContentPane().removeAll(); 
-                adminMain(frame);
-                frame.getContentPane().validate();
-                frame.getContentPane().repaint();
-            }
-        });
-        btnSubmit.setBounds(304, 336, 89, 23);
-        frame.getContentPane().add(btnSubmit);
 
         JDateChooser dateDeparture = new JDateChooser();
         dateDeparture.setBounds(119, 135, 178, 20);
@@ -854,9 +848,9 @@ public class gui {
         lblDepartureTime.setBounds(119, 166, 124, 14);
         frame.getContentPane().add(lblDepartureTime);
 
-        JLabel lblArrivalTime = new JLabel("Arrival Time");
-        lblArrivalTime.setBounds(409, 166, 124, 14);
-        frame.getContentPane().add(lblArrivalTime);
+        JLabel lblTravelTime = new JLabel("Travel Time");
+        lblTravelTime.setBounds(409, 166, 124, 14);
+        frame.getContentPane().add(lblTravelTime);
 
         JLabel lblSeats = new JLabel("Seats");
         lblSeats.setBounds(119, 222, 46, 14);
@@ -865,5 +859,38 @@ public class gui {
         JLabel lblPricePerSeat = new JLabel("Price per seat");
         lblPricePerSeat.setBounds(409, 220, 96, 14);
         frame.getContentPane().add(lblPricePerSeat);
+        
+        JButton btnSubmit = new JButton("Submit");
+        btnSubmit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+            	Date dateString = dateDeparture.getDate();
+            	
+            	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                String formatedDate = format.format(dateString); 
+            	if(sc.addFlight(txtOrigin.getText(), txtDestination.getText(), formatedDate, txtDepartureTime.getText(), txtTravelTime.getText(), Integer.parseInt(txtPricePerSeat.getText()), (int) spNrOfSeats.getValue())) {
+            		
+            		JOptionPane.showMessageDialog(frame, "Success!",
+                            "Flight was Added", JOptionPane.OK_OPTION);
+            		
+            		frame.getContentPane().removeAll(); 
+            		adminMain(frame);
+            		frame.getContentPane().validate();
+            		frame.getContentPane().repaint();
+            		
+            	} else {
+            		
+            		JOptionPane.showMessageDialog(frame, "Something went wrong!",
+                            "Something went wrong, the flight was not added", JOptionPane.ERROR_MESSAGE);
+            		
+            	}
+            	
+            	
+            	
+            	
+            }
+        });
+        btnSubmit.setBounds(304, 336, 89, 23);
+        frame.getContentPane().add(btnSubmit);
     }
 }

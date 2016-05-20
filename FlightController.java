@@ -171,7 +171,15 @@ public class FlightController {
         );
     }
 	
+    public String[][] getAllFlights() {
+    	String[][] flights = this.dbGetFlights("SELECT * FROM flights");
+    	
+    	return flights;
+    }
+    
     public String[][] getFlights(String origin, String destination, String date) {
+    	
+    	
         String[][] flights = this.dbGetFlights(
             "SELECT * FROM flights WHERE origin = '" +
             origin + "' AND destination = '" + destination +
@@ -205,10 +213,6 @@ public class FlightController {
         return this.deleteFromDatabase(id);
     }
 
-    public boolean removeFullBookedFlight(){
-        return this.dbDelete("DELETE FROM flights WHERE nr_of_seats = 0");
-    }
-
     public boolean updateFlight(int id,String origin, String destination,
         String deptDate, String deptTime, String travelTime, int price, int seats) {
         return this.updateDatabase(
@@ -219,7 +223,7 @@ public class FlightController {
     private boolean addToDatabase(String origin, String destination,
         String deptDate, String deptTime, String travelTime, int price, int seats) {
         return this.dbInsert(
-            "INSERT INTO flights VALUES('" +
+            "INSERT INTO flights VALUES(" + null + ",'" +
             origin + "', '" +
             destination + "', '" +
             deptDate + "', '" +
