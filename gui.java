@@ -128,7 +128,7 @@ public class gui {
                         frame.getContentPane().repaint();
                     }  
                 } catch (NullPointerException e){
-                	System.out.println(e);
+                	
                 	JOptionPane.showMessageDialog(frame, "Invalid date",
                             "Invalid date", JOptionPane.ERROR_MESSAGE);    
                 }
@@ -960,6 +960,8 @@ public class gui {
         JLabel lblSeats = new JLabel("Seats");
         lblSeats.setBounds(119, 222, 46, 14);
         frame.getContentPane().add(lblSeats);
+        
+        
 
         JLabel lblPricePerSeat = new JLabel("Price per seat");
         lblPricePerSeat.setBounds(409, 220, 96, 14);
@@ -987,37 +989,59 @@ public class gui {
                 
             	Date dateString = dateDeparture.getDate();
             	
-            	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                String formatedDate = format.format(dateString);
+            	
+                
+                try{
+                	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    String formatedDate = format.format(dateString);
+                	
+        
+                			
                 if(flight == null){
-                	if(sc.addFlight(txtOrigin.getText(), txtDestination.getText(), formatedDate, txtDepartureTime.getText(), txtTravelTime.getText(), Integer.parseInt(txtPricePerSeat.getText()), Integer.parseInt(txtNrOfSeats.getText()))) {
-                		
-                		JOptionPane.showMessageDialog(frame, "Success!",
-                                "Flight was Added", JOptionPane.OK_OPTION);
-                		
-                		frame.getContentPane().removeAll(); 
-                		adminMain(frame,null);
-                		frame.getContentPane().validate();
-                		frame.getContentPane().repaint();
-                		
-                	} else {
-                		JOptionPane.showMessageDialog(frame, "Something went wrong!",
-                                "Something went wrong, the flight was not added", JOptionPane.ERROR_MESSAGE);	
+               
+                	if(Integer.parseInt(txtNrOfSeats.getText())>0 && Integer.parseInt(txtPricePerSeat.getText())>0){
+	                	if(sc.addFlight(txtOrigin.getText(), txtDestination.getText(), formatedDate, txtDepartureTime.getText(), txtTravelTime.getText(), Integer.parseInt(txtPricePerSeat.getText()), Integer.parseInt(txtNrOfSeats.getText()))) {
+	                		
+	                		JOptionPane.showMessageDialog(frame, "Success!",
+	                                "Flight was Added", JOptionPane.OK_OPTION);
+	                		
+	                		frame.getContentPane().removeAll(); 
+	                		adminMain(frame,null);
+	                		frame.getContentPane().validate();
+	                		frame.getContentPane().repaint();
+	                		
+	                	} else {
+	                		JOptionPane.showMessageDialog(frame, "Invalid parameters!",
+	                                "Something went wrong, the flight was not added", JOptionPane.ERROR_MESSAGE);	
+	                	}
+                	}else{
+                		JOptionPane.showMessageDialog(frame, "Invalid parameters!",
+                                "Invalid parameters, the flight was not added", JOptionPane.ERROR_MESSAGE);
                 	}
                 }else{
-                	if(sc.updateFlight(Integer.parseInt(flight[0]),txtOrigin.getText(), txtDestination.getText(), formatedDate, txtDepartureTime.getText(), txtTravelTime.getText(), Integer.parseInt(txtPricePerSeat.getText()), Integer.parseInt(txtNrOfSeats.getText()))){
-                		JOptionPane.showMessageDialog(frame, "Success!",
-                                "Flight was Added", JOptionPane.OK_OPTION);
-                		
-                		frame.getContentPane().removeAll(); 
-                		adminMain(frame,null);
-                		frame.getContentPane().validate();
-                		frame.getContentPane().repaint();
-                	}else{
-                		JOptionPane.showMessageDialog(frame, "Something went wrong!",
-                                "Something went wrong, the flight was not added", JOptionPane.ERROR_MESSAGE);
+                	if(Integer.parseInt(txtNrOfSeats.getText())>=0 && Integer.parseInt(txtPricePerSeat.getText())>=0)
+                	{
+	                	if(sc.updateFlight(Integer.parseInt(flight[0]),txtOrigin.getText(), txtDestination.getText(), formatedDate, txtDepartureTime.getText(), txtTravelTime.getText(), Integer.parseInt(txtPricePerSeat.getText()), Integer.parseInt(txtNrOfSeats.getText()))){
+	                		JOptionPane.showMessageDialog(frame, "Success!",
+	                                "Flight was Added", JOptionPane.OK_OPTION);
+	                		
+	                		frame.getContentPane().removeAll(); 
+	                		adminMain(frame,null);
+	                		frame.getContentPane().validate();
+	                		frame.getContentPane().repaint();
+	                	}else{
+	                		JOptionPane.showMessageDialog(frame, "Something went wrong!",
+	                                "Something went wrong, the flight was not updated", JOptionPane.ERROR_MESSAGE);
+	                	}
+                	}else {
+                		JOptionPane.showMessageDialog(frame, "Invalid parameters!",
+                                "Invalid parameters, the flight was not updated", JOptionPane.ERROR_MESSAGE);
                 	}
                 	
+                }
+                } catch (Exception p){
+                	JOptionPane.showMessageDialog(frame, "Invalid parameters!",
+                            "Invalid parameters!", JOptionPane.ERROR_MESSAGE);
                 }
             	
             }
