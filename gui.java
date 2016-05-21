@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JDateChooser;
+import java.awt.HeadlessException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,12 +39,13 @@ public class gui {
     
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     gui window = new gui();
                     window.frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } finally {
+                    
                 }
             }
         });
@@ -119,7 +121,7 @@ public class gui {
                 } catch (NullPointerException e) {
                     System.out.println(e);
                     JOptionPane.showMessageDialog(frame, "Invalid date",
-                        "Invalid date", JOptionPane.ERROR_MESSAGE);    
+                        "Invalid date", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -139,6 +141,7 @@ public class gui {
     public void login_register(JFrame frame) {
     	JButton btnLogin = new JButton("Login");
         btnLogin.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
             	frame.getContentPane().removeAll();
              	login(frame);
@@ -151,6 +154,7 @@ public class gui {
 
          JButton btnRegister = new JButton("Register");
          btnRegister.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 frame.getContentPane().removeAll();
              	register(frame);
@@ -169,6 +173,7 @@ public class gui {
 
         JButton btnLogout = new JButton("Logout");
         btnLogout.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
            	frame.getContentPane().removeAll();
             	initialize(frame,false);
@@ -240,6 +245,7 @@ public class gui {
         
         JButton btnHome = new JButton("Home");
         btnHome.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 frame.getContentPane().removeAll();
                 initialize(frame,false);
@@ -303,6 +309,7 @@ public class gui {
 
         JButton btnRegister = new JButton("Register");
         btnRegister.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (passwordField.getText().equals(passwordConfirmField.getText())) {
                     String email= emailField.getText();
@@ -341,6 +348,7 @@ public class gui {
         
         JButton btnHome = new JButton("Home");
         btnHome.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 frame.getContentPane().removeAll();
                 initialize(frame,false);
@@ -399,6 +407,7 @@ public class gui {
 
         JButton btnSearch = new JButton("Search");
         btnSearch.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 String origin = txtOrigin.getText();
                 String destination = txtDestination.getText();
@@ -434,6 +443,7 @@ public class gui {
 
         JButton btnBook = new JButton("Book");
         btnBook.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
             	if (table.getSelectedRow() != -1) {
                     String[] flight = flights[table.getSelectedRow()];
@@ -452,6 +462,7 @@ public class gui {
         
         JButton btnHome = new JButton("Home");
         btnHome.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 frame.getContentPane().removeAll();
                 initialize(frame,false);
@@ -560,6 +571,7 @@ public class gui {
         JSpinner spPassengers = new JSpinner(model1);
         spPassengers.setValue(1);
         spPassengers.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent arg0) {
                 int price = (Integer)spPassengers.getValue() * Integer.parseInt(flight[6]);
                 txtPrice.setText(Integer.toString(price));
@@ -572,6 +584,7 @@ public class gui {
         
         JButton btnBook = new JButton("Book");
         btnBook.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
             	int nrOfPassengers = (int)spPassengers.getValue();
                 frame.getContentPane().removeAll();
@@ -586,6 +599,7 @@ public class gui {
         
         JButton btnHome = new JButton("Home");
         btnHome.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 frame.getContentPane().removeAll();
                 initialize(frame,false);
@@ -632,6 +646,7 @@ public class gui {
 
         JButton btnPay = new JButton("Pay");
         btnPay.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
             	int id = Integer.parseInt(flight[0]);
             	String cardNr = txtCardNr.getText();
@@ -663,6 +678,7 @@ public class gui {
         
         JButton btnHome = new JButton("Home");
         btnHome.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 frame.getContentPane().removeAll();
                 initialize(frame,false);
@@ -778,6 +794,7 @@ public class gui {
 
         JButton btnAddFlight = new JButton("Add Flight");
         btnAddFlight.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 frame.getContentPane().removeAll(); 
                 adminEditAdd(frame,null);
@@ -793,6 +810,7 @@ public class gui {
         
         JButton btnEdit = new JButton("Edit");
         btnEdit.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
             	if (table.getSelectedRow() != -1) {
                     frame.getContentPane().removeAll();
@@ -810,6 +828,7 @@ public class gui {
 
         JButton btnRemove = new JButton("Remove");
         btnRemove.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 frame.getContentPane().removeAll();
 
@@ -829,6 +848,7 @@ public class gui {
         
         JButton btnViewAll = new JButton("View All");
         btnViewAll.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 frame.getContentPane().removeAll();
                 adminMain(frame,null);
@@ -846,6 +866,7 @@ public class gui {
     	
     	JButton btnHome = new JButton("Back");
         btnHome.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 frame.getContentPane().removeAll();
                 adminMain(frame,null);
@@ -917,7 +938,7 @@ public class gui {
         JLabel lblSeats = new JLabel("Seats");
         lblSeats.setBounds(119, 222, 46, 14);
         frame.getContentPane().add(lblSeats);
-
+        
         JLabel lblPricePerSeat = new JLabel("Price per seat");
         lblPricePerSeat.setBounds(409, 220, 96, 14);
         frame.getContentPane().add(lblPricePerSeat);
@@ -932,7 +953,6 @@ public class gui {
             try {
                 dateDeparture.setDate(format.parse(flight[3]));
             } catch (ParseException e1) {
-                e1.printStackTrace();
             }
             
             txtPricePerSeat.setText(flight[6]);
@@ -941,8 +961,8 @@ public class gui {
         
         JButton btnSubmit = new JButton("Submit");
         btnSubmit.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                
             	if (txtOrigin.getText().equals("") ||
                     txtDestination.getText().equals("") ||
                     txtDepartureTime.getText().equals("") ||
@@ -1006,6 +1026,63 @@ public class gui {
                     	}
                     }
             	}
+                Date dateString = dateDeparture.getDate();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                String formatedDate = format.format(dateString);
+
+                if (flight == null) {
+                    if(Integer.parseInt(txtNrOfSeats.getText()) > 0 &&
+                        Integer.parseInt(txtPricePerSeat.getText()) > 0) {
+                        if(sc.addFlight(txtOrigin.getText(),
+                            txtDestination.getText(),
+                            formatedDate, txtDepartureTime.getText(),
+                            txtTravelTime.getText(),
+                            Integer.parseInt(txtPricePerSeat.getText()),
+                            Integer.parseInt(txtNrOfSeats.getText()))) {
+
+                            JOptionPane.showMessageDialog(frame, "Success!",
+                            "Flight was Added", JOptionPane.OK_OPTION);
+
+                            frame.getContentPane().removeAll(); 
+                            adminMain(frame,null);
+                            frame.getContentPane().validate();
+                            frame.getContentPane().repaint();
+                            } else {
+                                JOptionPane.showMessageDialog(frame, "Invalid parameters!",
+                                    "Something went wrong, the flight was not added", JOptionPane.ERROR_MESSAGE);	
+                            }
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Invalid parameters!",
+                            "Invalid parameters, the flight was not added", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    if (Integer.parseInt(txtNrOfSeats.getText()) >= 0 &&
+                        Integer.parseInt(txtPricePerSeat.getText()) >= 0) {
+                        if (sc.updateFlight(Integer.parseInt(flight[0]),
+                            txtOrigin.getText(),
+                            txtDestination.getText(),
+                            formatedDate,
+                            txtDepartureTime.getText(),
+                            txtTravelTime.getText(),
+                            Integer.parseInt(txtPricePerSeat.getText()),
+                            Integer.parseInt(txtNrOfSeats.getText()))) {
+
+                            JOptionPane.showMessageDialog(frame, "Success!",
+                            "Flight was Added", JOptionPane.OK_OPTION);
+
+                            frame.getContentPane().removeAll(); 
+                            adminMain(frame,null);
+                            frame.getContentPane().validate();
+                            frame.getContentPane().repaint();
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "Something went wrong!",
+                                "Something went wrong", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Invalid parameters!",
+                            "Invalid parameters", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
         });
         btnSubmit.setBounds(304, 336, 89, 23);
