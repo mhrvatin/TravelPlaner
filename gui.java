@@ -14,6 +14,7 @@ import java.awt.HeadlessException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
@@ -35,7 +36,6 @@ public class gui {
     private JTextField txtPricePerSeat;
     private JTextField txtNrOfSeats;
     private final SystemController sc = new SystemController();
-
     
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -119,7 +119,6 @@ public class gui {
                         frame.getContentPane().repaint();
                     }  
                 } catch (NullPointerException e) {
-                    System.out.println(e);
                     JOptionPane.showMessageDialog(frame, "Invalid date",
                         "Invalid date", JOptionPane.ERROR_MESSAGE);
                 }
@@ -431,7 +430,6 @@ public class gui {
                         frame.getContentPane().repaint();
                     }  
                 } catch (NullPointerException ex) {
-                    System.out.println(ex);
                     JOptionPane.showMessageDialog(frame, "Invalid date",
                         "Invalid date", JOptionPane.ERROR_MESSAGE);    
                 }
@@ -748,7 +746,6 @@ public class gui {
                         frame.getContentPane().repaint();
                     }  
                 } catch (NullPointerException e) {
-                    System.out.println(e);
                     JOptionPane.showMessageDialog(frame, "Invalid date",
                         "Invalid date", JOptionPane.ERROR_MESSAGE);    
                 }
@@ -976,53 +973,82 @@ public class gui {
                         Date dateString = dateDeparture.getDate();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                         String formatedDate = format.format(dateString);
-                        
+                        Pattern hourMinutePattern = Pattern.compile(
+                            "^([2][0-3]|[01][0-9])([.:][0-5][0-9])?$"
+                        );
                         if (flight == null) {
                             if(Integer.parseInt(txtNrOfSeats.getText()) > 0 &&
                                 Integer.parseInt(txtPricePerSeat.getText()) > 0) {
-                                if(sc.addFlight(txtOrigin.getText(),
-                                    txtDestination.getText(),
-                                    formatedDate, txtDepartureTime.getText(),
-                                    txtTravelTime.getText(),
-                                    Integer.parseInt(txtPricePerSeat.getText()),
-                                    Integer.parseInt(txtNrOfSeats.getText()))) {
+                                if (hourMinutePattern.matcher(
+                                        txtDepartureTime.getText()
+                                    ).matches() &&
+                                    hourMinutePattern.matcher(
+                                        txtTravelTime.getText()
+                                    ).matches()
+                                    )
+                                {
+                                    if (sc.addFlight(txtOrigin.getText(),
+                                        txtDestination.getText(),
+                                        formatedDate,
+                                        txtDepartureTime.getText(),
+                                        txtTravelTime.getText(),
+                                        Integer.parseInt(txtPricePerSeat.getText()),
+                                        Integer.parseInt(txtNrOfSeats.getText()))) {
 
-                                    JOptionPane.showMessageDialog(frame, "Success!",
-                                    "Flight was Added", JOptionPane.INFORMATION_MESSAGE);
+                                        JOptionPane.showMessageDialog(frame, "Success!",
+                                        "Flight was Added", JOptionPane.INFORMATION_MESSAGE);
 
-                                    frame.getContentPane().removeAll(); 
-                                    adminMain(frame,null);
-                                    frame.getContentPane().validate();
-                                    frame.getContentPane().repaint();
+                                        frame.getContentPane().removeAll(); 
+                                        adminMain(frame,null);
+                                        frame.getContentPane().validate();
+                                        frame.getContentPane().repaint();
                                     } else {
                                         JOptionPane.showMessageDialog(frame, "Invalid parameters!",
                                             "Something went wrong", JOptionPane.ERROR_MESSAGE);   
                                     }
+                                } else {
+                                    JOptionPane.showMessageDialog(frame, "Invalid time parameters",
+                                        "Something went wrong", JOptionPane.ERROR_MESSAGE);
+                                }
                             } else {
-                                JOptionPane.showMessageDialog(frame, "Invalid parameters!",
-                                    "Invalid parameters", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(frame, "Number of"
+                                    + " seats and price per seat must be "
+                                    + "greater than zero", "Invalid parameters",
+                                    JOptionPane.ERROR_MESSAGE);
                             }
                         } else {
                             if (Integer.parseInt(txtNrOfSeats.getText()) >= 0 &&
                                 Integer.parseInt(txtPricePerSeat.getText()) >= 0) {
-                                if (sc.updateFlight(Integer.parseInt(flight[0]),
-                                    txtOrigin.getText(),
-                                    txtDestination.getText(),
-                                    formatedDate,
-                                    txtDepartureTime.getText(),
-                                    txtTravelTime.getText(),
-                                    Integer.parseInt(txtPricePerSeat.getText()),
-                                    Integer.parseInt(txtNrOfSeats.getText()))) {
+                                if (hourMinutePattern.matcher(
+                                        txtDepartureTime.getText()
+                                    ).matches() &&
+                                    hourMinutePattern.matcher(
+                                        txtTravelTime.getText()
+                                    ).matches()
+                                    )
+                                {
+                                    if (sc.updateFlight(Integer.parseInt(flight[0]),
+                                        txtOrigin.getText(),
+                                        txtDestination.getText(),
+                                        formatedDate,
+                                        txtDepartureTime.getText(),
+                                        txtTravelTime.getText(),
+                                        Integer.parseInt(txtPricePerSeat.getText()),
+                                        Integer.parseInt(txtNrOfSeats.getText()))) {
 
-                                    JOptionPane.showMessageDialog(frame, "Success!",
-                                    "Flight was Added", JOptionPane.OK_OPTION);
+                                        JOptionPane.showMessageDialog(frame, "Success!",
+                                        "Flight was Added", JOptionPane.OK_OPTION);
 
-                                    frame.getContentPane().removeAll(); 
-                                    adminMain(frame,null);
-                                    frame.getContentPane().validate();
-                                    frame.getContentPane().repaint();
+                                        frame.getContentPane().removeAll(); 
+                                        adminMain(frame,null);
+                                        frame.getContentPane().validate();
+                                        frame.getContentPane().repaint();
+                                    } else {
+                                        JOptionPane.showMessageDialog(frame, "Something went wrong!",
+                                            "Something went wrong", JOptionPane.ERROR_MESSAGE);
+                                    }
                                 } else {
-                                    JOptionPane.showMessageDialog(frame, "Something went wrong!",
+                                    JOptionPane.showMessageDialog(frame, "Invalid time parameters",
                                         "Something went wrong", JOptionPane.ERROR_MESSAGE);
                                 }
                             } else {
@@ -1030,9 +1056,9 @@ public class gui {
                                     "Invalid parameters", JOptionPane.ERROR_MESSAGE);
                             }
                         }
-                    } catch (NumberFormatException | HeadlessException p){
-                        JOptionPane.showMessageDialog(frame, "Invalid parameters!",
-                            "Invalid parameters!", JOptionPane.ERROR_MESSAGE);
+                    } catch (NullPointerException ex) {
+                        JOptionPane.showMessageDialog(frame, "Invalid date",
+                            "Invalid date", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
