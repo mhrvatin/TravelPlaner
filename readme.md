@@ -3,7 +3,7 @@
 
 ## Background
 
-TravelPlanner is a project from the course "Programvarudesign(PA1415)" at
+TravelPlanner is a project from the course `Programvarudesign(PA1415)` at
 BTH. The purpose of the project is to learn how to work through all the
 diffrent steps in making a product as team of 4-5 people.
 
@@ -15,7 +15,7 @@ We chose to implement our version of TravelPlanner in Java.
 ## Installation
 1. Extract the files from the zip file.
 
-    1. The zip file contains two folders. One with all the raw, uncompiled
+    * The zip file contains two folders. One with all the raw, uncompiled
        sources files and one folder with just a .jar-file and the database.
 
 2. Make sure the database-file is located in the same folder as the executable
@@ -88,7 +88,7 @@ account, make sure you register one.
 
     *Add*
 
-    1. When you add a flight you're presented with a new view. Here you get to
+    * When you add a flight you're presented with a new view. Here you get to
        enter all the information for a new flight. Fill out all fields and press
        "Submit" to enter the new flight to the database. A popup window will let
        you know if the flight has been added or not. You'll be redirected back
@@ -96,7 +96,7 @@ account, make sure you register one.
 
     *Edit*
 
-    1. Select a flight in the list and click "Edit". You're redirected to a new
+    * Select a flight in the list and click "Edit". You're redirected to a new
        page where you get to see all the information for the flight in the
        database. Here you can edit all the information. Press "Submit" once
        you're happy with your changes. A popup should appear, letting you know
@@ -105,5 +105,5 @@ account, make sure you register one.
 
     *Remove*
 
-    1. First, select a flight in the list by clicking on it. Next, you press the
+    * First, select a flight in the list by clicking on it. Next, you press the
        "Remove" button and the flight should disappear from the list.

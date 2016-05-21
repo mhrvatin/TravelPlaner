@@ -8,8 +8,8 @@ import java.sql.Statement;
  
  
 public class EmailController {
-    private String user;
-    private EmailMock mock;
+    private final String user;
+    private final EmailMock mock;
    
     public EmailController(String user) {
     	this.user = user;
@@ -33,12 +33,15 @@ public class EmailController {
         String date = "";
 
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
+            connection = DriverManager.getConnection("jdbc:sqlite:" +
+                SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
            
-            ResultSet rs = statement.executeQuery("SELECT * FROM transactions WHERE email = '" + this.user
-                                                  + "' ORDER BY transaction_id desc LIMIT 1");
+            ResultSet rs = statement.executeQuery(
+                "SELECT * FROM transactions WHERE email = '" + this.user + 
+                "' ORDER BY transaction_id desc LIMIT 1"
+            );
            
             while(rs.next()) {
                 //Save data from database in the variable (int transaction)
@@ -54,13 +57,11 @@ public class EmailController {
                 if (connection != null)
                     connection.close();
             } catch (SQLException e) {
-                // connection close failed.
                 System.err.println(e);
             }
         }
 
-        String allInfo = "Transaction id: "+ transaction +" Price: "+ price + " Date: "+ date;
-        return allInfo;
+        return "Transaction id: "+ transaction +" Price: "+ price + " Date: "+ date;
     }
     
     //TASK: Creates the reciept out of data from the getTranscation function
@@ -75,12 +76,14 @@ public class EmailController {
         String email = null;
        
         try {
-           
-            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
+            connection = DriverManager.getConnection("jdbc:sqlite:" +
+                SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
            
-            ResultSet rs = statement.executeQuery("SELECT * FROM users WHERE email = '" + this.user +"'");
+            ResultSet rs = statement.executeQuery(
+                "SELECT * FROM users WHERE email = '" + this.user +"'"
+            );
            
             while(rs.next()) {
                 //Save data from database in the variables:
@@ -100,11 +103,9 @@ public class EmailController {
             }
         }
        
-        String reciept="Recipt from TravelPlanner \n"
-        + "Hello " + name + " " +lastName +"! "+ allInfo + " on your account "
-        +" with the register email: " + email ;
-
-        return reciept;
+        return "Recipt from TravelPlanner \n" +
+        "Hello " + name + " " +lastName +"! "+ allInfo + " on your account " +
+        " with the register email: " + email ;
     }
     
     public boolean sendActivate() {
@@ -112,17 +113,18 @@ public class EmailController {
         String activateHash = null;
        
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
+            connection = DriverManager.getConnection("jdbc:sqlite:" +
+                SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
            
-            ResultSet rs = statement.executeQuery("SELECT activation_hash FROM users WHERE email = '" + this.user +"'");
+            ResultSet rs = statement.executeQuery(
+                "SELECT activation_hash FROM users WHERE email = '" +
+                this.user + "'"
+            );
 
-            // read the result set
-            activateHash=rs.getString("activation_hash");
+            activateHash = rs.getString("activation_hash");
         } catch(SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
         } finally {
             try {
@@ -139,4 +141,3 @@ public class EmailController {
         return mock.sendEmail(this.user, message);
     }
 }
-

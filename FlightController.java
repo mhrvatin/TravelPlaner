@@ -15,7 +15,8 @@ public class FlightController {
         boolean success = true;
 
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
+            connection = DriverManager.getConnection("jdbc:sqlite:" +
+                SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  
 
@@ -23,8 +24,6 @@ public class FlightController {
                 statement.executeUpdate(SQL);
             }
         } catch(SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
             success = false;
         } finally {
@@ -32,7 +31,6 @@ public class FlightController {
                 if(connection != null)
                     connection.close();
             } catch(SQLException e) {
-                // connection close failed.
                 System.err.println(e);
             }
         }
@@ -45,7 +43,8 @@ public class FlightController {
         boolean success = true;
 
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
+            connection = DriverManager.getConnection("jdbc:sqlite:" +
+                SystemController.dbPath);
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  
 
@@ -53,8 +52,6 @@ public class FlightController {
                 statement.executeUpdate(SQL);
             }
         } catch(SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
             System.err.println(e.getMessage());
             success = false;
         } finally {
@@ -62,7 +59,6 @@ public class FlightController {
                 if(connection != null)
                     connection.close();
             } catch(SQLException e) {
-                // connection close failed.
                 System.err.println(e);
             }
         }
@@ -74,27 +70,25 @@ public class FlightController {
         Connection connection = null;
         Integer flight[] = new Integer[2];
 
-        if(!SQL.equals("")) {
+        if (!SQL.equals("")) {
             try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + SystemController.dbPath);
-            Statement statement = connection.createStatement();
-            statement.setQueryTimeout(30);  
-            ResultSet rs = statement.executeQuery(SQL);    
+                connection = DriverManager.getConnection("jdbc:sqlite:" +
+                    SystemController.dbPath);
+                Statement statement = connection.createStatement();
+                statement.setQueryTimeout(30);  
+                ResultSet rs = statement.executeQuery(SQL);    
 
-            while(rs.next()) {
-                flight[0] = rs.getInt("flight_id");
-                flight[1] = rs.getInt("nr_of_seats");
+                while(rs.next()) {
+                    flight[0] = rs.getInt("flight_id");
+                    flight[1] = rs.getInt("nr_of_seats");
                 }
             } catch(SQLException e) {
-                // if the error message is "out of memory",
-                // it probably means no database file is found
                 System.err.println(e.getMessage());
             } finally {
                 try {
                     if(connection != null)
                         connection.close();
                 } catch(SQLException e) {
-                    // connection close failed.
                     System.err.println(e);
                 }
             }
@@ -105,7 +99,6 @@ public class FlightController {
     private String[][] dbGetFlights(String SQL) {
         Connection connection = null;
         String[][] flights = new String[25][8];
-               
         
         if (!SQL.equals("")) {
             try {
@@ -129,15 +122,12 @@ public class FlightController {
                     count++;
                 }
             } catch(SQLException e) {
-                // if the error message is "out of memory",
-                // it probably means no database file is found
                 System.err.println(e.getMessage());
             } finally {
                 try {
                     if(connection != null)
                         connection.close();
                 } catch(SQLException e) {
-                    // connection close failed.
                     System.err.println(e);
                 }
             }
@@ -147,7 +137,9 @@ public class FlightController {
     }
 	
     public boolean bookFlight(int id, int nrOfPassengers) {
-        Integer[] flight = this.dbGet("SELECT * FROM flights WHERE flight_id = " + id);
+        Integer[] flight = this.dbGet(
+            "SELECT * FROM flights WHERE flight_id = " + id
+        );
         int nrOfSeats = flight[1] - nrOfPassengers;
 
         return this.dbInsert(
@@ -163,8 +155,6 @@ public class FlightController {
     }
     
     public String[][] getFlights(String origin, String destination, String date) {
-    	
-    	
         String[][] flights = this.dbGetFlights(
             "SELECT * FROM flights WHERE origin = '" +
             origin + "' AND destination = '" + destination +
@@ -174,13 +164,11 @@ public class FlightController {
         return flights;
     }
 
-
-    public boolean addFlight(String origin, String destination,
-        String deptDate, String deptTime, String travelTime, int price, int seats) {
+    public boolean addFlight(String origin, String destination, String deptDate,
+        String deptTime, String travelTime, int price, int seats) {
         return this.addToDatabase(
             origin, destination,deptDate, deptTime, travelTime, price, seats
         );
-
     }
 
     public boolean removeFlight(int id){
@@ -213,7 +201,7 @@ public class FlightController {
     }
 
     private boolean updateDatabase(int id, String origin, String destination,
-            String deptDate, String deptTime, String travelTime, int price,int seats){
+        String deptDate, String deptTime, String travelTime, int price, int seats){
         return this.dbInsert(
             "UPDATE flights SET " +
             "origin = '" + origin + 
@@ -227,4 +215,3 @@ public class FlightController {
         );
     }
 }
-
