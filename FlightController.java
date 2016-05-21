@@ -174,17 +174,6 @@ public class FlightController {
         return flights;
     }
 
-    // make sure to test!
-    public String[][] getFlightsInfo(int id){
-        String[][] flights = this.dbGetFlights(
-            "SELECT * FROM flights WHERE flight_id = " + id
-        );
-        
-        //System.out.println(flights[0][1]);
-        
-        //return flights[0];
-        return flights;
-    }
 
     public boolean addFlight(String origin, String destination,
         String deptDate, String deptTime, String travelTime, int price, int seats) {
