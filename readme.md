@@ -21,8 +21,33 @@ We chose to implement our version of TravelPlanner in Java.
 2. Make sure the database-file is located in the same folder as the executable
    before you run the jar-file.
 
-3. If you'd like to compile the application yourself, simply run the [file]
-   located in `/src`
+3. If you'd like to compile the application yourself, simply make a new project
+   in your IDE and import the files from `/src`. Make sure you add the libraries
+   to the project.
+
+    *Netbeans*
+
+    1. Right click your project(the cup icon) and select `Properties`.
+
+    2. Select `Libraries` in the list to the left.
+
+    3. On the right, click `Add JAR/Folder`.
+
+    4. Find the `JAR`-file and click `Open`.
+
+    5. Click `OK`. 
+    
+    *Eclipse*
+
+    1. Right click your project in `Package Explorer` and select `Properties`.
+
+    2. Select `Java Build Path` in the list to the left.
+
+    3. Click `Add External JARs...` to the right.
+    
+    4. Select the libraries and click `Open`
+
+    5. Click `OK`
 
 ## Use cases
 We have two use cases; one as a customer and one as an admin.

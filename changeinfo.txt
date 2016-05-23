@@ -5,7 +5,7 @@ SystemController:
 EmailController:
 * added private variable for instance of EmailMock
 * added sendActivate() 
-* changed return type of makeRecipt() from X to string
+* changed return type of makeRecipt() from void to string
 
 FlightController:
 * added functions for database functions
